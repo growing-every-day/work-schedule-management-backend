@@ -24,23 +24,23 @@ public class UserAccount {
     private String id; // 아이디
 
     @Column(nullable = false)
-    private String password;
+    private String password; // 패스워드
 
     @Setter
     @Column(nullable = false)
-    private String name;
+    private String name; // 이름
 
     @Setter
     @Column(nullable = false)
-    private String email;
+    private String email; // 이메일
 
     @Setter
     @Column(columnDefinition = "ENUM('ADMIN','USER')")
     @Enumerated(EnumType.STRING)
-    private UserRoleType role = UserRoleType.USER; // 사용자 역할
+    private UserRoleType role = UserRoleType.USER; // 권한
 
     @Setter
     @Column
-    private int remainedVacationCount;
+    private int remainedVacationCount; // 연차 잔여 일수
 
 }
