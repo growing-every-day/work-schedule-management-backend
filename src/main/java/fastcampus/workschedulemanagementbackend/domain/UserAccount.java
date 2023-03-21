@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
+
 @Getter
 @ToString
 @Table(indexes = { // 빠르게 서칭이 가능하도록 인덱싱을 걸어준다.
@@ -15,11 +19,13 @@ import lombok.ToString;
 })
 @Entity
 public class UserAccount extends BaseTimeEntity {
+
+    @Transient
     private final int DEFAULT_VACATION_DAYS = 25; // 기본 연차 일수 - 25일
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long seq;
+    private Long seq;
 
     @Column(nullable = false)
     private String id; // 아이디
@@ -45,6 +51,17 @@ public class UserAccount extends BaseTimeEntity {
     @Column
     private int remainedVacationCount; // 연차 잔여 일수
 
+    @ToString.Exclude
+    @OrderBy("regDate DESC")
+    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
+    private final Set<WorkSchedule> workSchedules = new LinkedHashSet<>();
+
+
+    @ToString.Exclude
+    @OrderBy("loginTime DESC")
+    @OneToMany(mappedBy = "userAccount")
+    private final Set<UserLoginLog> userLoginLogs = new LinkedHashSet<>();
+
     protected UserAccount() {
     }
 
@@ -60,4 +77,15 @@ public class UserAccount extends BaseTimeEntity {
         return new UserAccount(id, password, name, email);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserAccount that)) return false;
+        return this.getSeq() != null && this.getSeq() == that.getSeq();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getSeq());
+    }
 }
