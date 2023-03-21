@@ -47,8 +47,11 @@ class UserAccountTest {
 >>>>>>> feat #7- create and test basic UserAccountService
 =======
         System.out.println("find user created time = " + findUser.getCreatedAt());
+<<<<<<< main
         assertThat(findUser.getCreatedAt()).isAfter(now);
 >>>>>>> fix #7 - fix code after rebase main branch
+=======
+>>>>>>> feat #7- create and test basic UserAccountService
     }
 
 }
