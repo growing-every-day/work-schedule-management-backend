@@ -40,6 +40,9 @@ class UserAccountTest {
 =======
         System.out.println("find user created time = " + findUser.getCreatedDate());
         assertThat(findUser.getCreatedDate()).isAfter(now);
+<<<<<<< main
+>>>>>>> feat #7- create and test basic UserAccountService
+=======
 >>>>>>> feat #7- create and test basic UserAccountService
     }
 

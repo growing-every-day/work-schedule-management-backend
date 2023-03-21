@@ -2,6 +2,7 @@ package fastcampus.workschedulemanagementbackend.service;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 <<<<<<< main
+<<<<<<< main
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import fastcampus.workschedulemanagementbackend.error.BadRequestException;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
@@ -82,6 +83,8 @@ public class UserAccountService {
                 })
                 .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다", id))));
 =======
+=======
+>>>>>>> feat #7- create and test basic UserAccountService
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -101,6 +104,9 @@ public class UserAccountService {
             return false;
         }
         return true;
+<<<<<<< main
+>>>>>>> feat #7- create and test basic UserAccountService
+=======
 >>>>>>> feat #7- create and test basic UserAccountService
     }
 }
