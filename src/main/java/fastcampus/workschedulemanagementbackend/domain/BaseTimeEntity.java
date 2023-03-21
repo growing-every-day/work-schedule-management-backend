@@ -20,9 +20,10 @@ public abstract class BaseTimeEntity{
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime regDate; // 생성일시
+    private LocalDateTime createdAt; // 생성일시
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @LastModifiedDate
-    private LocalDateTime chgDate;  // 수정일시
+    @Column(nullable = false)
+    private LocalDateTime modifiedAt;  // 수정일시
 }

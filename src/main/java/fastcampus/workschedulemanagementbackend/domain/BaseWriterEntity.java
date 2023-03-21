@@ -22,9 +22,10 @@ public abstract class BaseWriterEntity extends BaseTimeEntity{
     
     @CreatedBy
     @Column(nullable = false, updatable = false)
-    private Long regId; // 생성자
+    private Long createdBy; // 생성자
     
     @LastModifiedBy
-    private Long chgId; // 수정자
+    @Column(nullable = false)
+    private Long modifiedBy; // 수정자
 
 }
