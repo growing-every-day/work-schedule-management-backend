@@ -14,7 +14,7 @@ import lombok.ToString;
         @Index(columnList = "email"),
 })
 @Entity
-public class UserAccount {
+public class UserAccount extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long seq;
@@ -24,6 +24,7 @@ public class UserAccount {
     private String id; // 아이디
 
     @Column(nullable = false)
+    @Setter
     private String password; // 패스워드
 
     @Setter
@@ -42,5 +43,19 @@ public class UserAccount {
     @Setter
     @Column
     private int remainedVacationCount; // 연차 잔여 일수
+
+    protected UserAccount() {
+    }
+
+    private UserAccount(String id, String password, String name, String email) {
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+    }
+
+    public static UserAccount of(String id, String password, String name, String email) {
+        return new UserAccount(id, password, name, email);
+    }
 
 }

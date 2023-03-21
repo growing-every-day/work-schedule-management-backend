@@ -16,15 +16,13 @@ import java.time.LocalDateTime;
 @ToString
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class AuditingFields {
+public abstract class BaseTimeEntity{
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
-    @Column(nullable = false)
-    private LocalDateTime reg_date; // 생성일시
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdDate; // 생성일시
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime chg_date;  // 수정일시
-
+    private LocalDateTime modifdate;  // 수정일시
 }
