@@ -35,6 +35,7 @@ class UserAccountTest {
         UserAccount findUser = findUserList.get(0);
 
 <<<<<<< main
+<<<<<<< main
         System.out.println("find user created time = " + findUser.getCreatedAt());
         Assertions.assertThat(findUser.getCreatedAt()).isAfter(now);
 =======
@@ -44,6 +45,10 @@ class UserAccountTest {
 >>>>>>> feat #7- create and test basic UserAccountService
 =======
 >>>>>>> feat #7- create and test basic UserAccountService
+=======
+        System.out.println("find user created time = " + findUser.getCreatedAt());
+        assertThat(findUser.getCreatedAt()).isAfter(now);
+>>>>>>> fix #7 - fix code after rebase main branch
     }
 
 }
