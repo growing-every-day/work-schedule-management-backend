@@ -19,11 +19,12 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 public abstract class BaseWriterEntity extends BaseTimeEntity{
+    
     @CreatedBy
     @Column(nullable = false, updatable = false)
-    private String createdBy; // 생성자
+    private Long regId; // 생성자
     
     @LastModifiedBy
-    private String modifiedBy; // 수정자
+    private Long chgId; // 수정자
 
 }
