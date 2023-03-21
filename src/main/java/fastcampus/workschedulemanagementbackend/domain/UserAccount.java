@@ -15,11 +15,12 @@ import lombok.ToString;
 })
 @Entity
 public class UserAccount extends BaseTimeEntity {
+    private final int DEFAULT_VACATION_DAYS = 25; // 기본 연차 일수 - 25일
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long seq;
 
-    @Setter
     @Column(nullable = false)
     private String id; // 아이디
 
@@ -52,6 +53,7 @@ public class UserAccount extends BaseTimeEntity {
         this.password = password;
         this.name = name;
         this.email = email;
+        this.remainedVacationCount = DEFAULT_VACATION_DAYS;
     }
 
     public static UserAccount of(String id, String password, String name, String email) {
