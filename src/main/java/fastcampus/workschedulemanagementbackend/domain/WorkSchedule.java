@@ -13,17 +13,17 @@ import java.util.Objects;
 @ToString(callSuper = true)
 @Table(indexes = {
         @Index(columnList = "category"),
-        @Index(columnList = "user_account_seq")
+        @Index(columnList = "user_account_id")
 })
 @Entity
 public class WorkSchedule extends BaseWriterEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long seq;
+    private Long id;
 
     @Setter
-    @JoinColumn(name = "user_account_seq")
+    @JoinColumn(name = "user_account_id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
 
@@ -58,11 +58,11 @@ public class WorkSchedule extends BaseWriterEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof WorkSchedule that)) return false;
-        return this.getSeq() != null && this.getSeq().equals(that.getSeq());
+        return this.getId() != null && this.getId().equals(that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getSeq());
+        return Objects.hash(this.getId());
     }
 }

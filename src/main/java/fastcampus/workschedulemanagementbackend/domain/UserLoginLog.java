@@ -10,22 +10,22 @@ import java.util.Objects;
 @Getter
 @ToString
 @Table(indexes = {
-        @Index(columnList = "user_account_seq"),
-        @Index(columnList = "userAccountId")
+        @Index(columnList = "user_account_id"),
+        @Index(columnList = "userAccountUserName")
 })
 @Entity
 public class UserLoginLog  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long seq;
+    private Long id;
 
-    @JoinColumn(name = "user_account_seq")
+    @JoinColumn(name = "user_account_id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
 
     @Column(nullable = false)
-    private String userAccountId;
+    private String userAccountUserName;
 
     @Column(nullable = false)
     private String userAgent;
@@ -41,7 +41,7 @@ public class UserLoginLog  {
 
     private UserLoginLog(UserAccount userAccount, String userAgent, String ip) {
         this.userAccount = userAccount;
-        this.userAccountId = userAccount.getId();
+        this.userAccountUserName = userAccount.getUserName();
         this.userAgent = userAgent;
         this.ip = ip;
         this.loginTime = LocalDateTime.now();
@@ -55,11 +55,11 @@ public class UserLoginLog  {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserLoginLog that)) return false;
-        return this.getSeq() != null & this.getSeq().equals(that.getSeq());
+        return this.getId() != null & this.getId().equals(that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getSeq());
+        return Objects.hash(this.getId());
     }
 }
