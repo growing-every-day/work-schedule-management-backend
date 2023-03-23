@@ -13,7 +13,7 @@ import java.util.Set;
 @Getter
 @ToString
 @Table(indexes = { // 빠르게 서칭이 가능하도록 인덱싱을 걸어준다.
-        @Index(columnList = "id"),
+        @Index(columnList = "userName"),
         @Index(columnList = "name"),
         @Index(columnList = "email"),
 })
@@ -25,10 +25,10 @@ public class UserAccount extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long seq;
+    private Long id;
 
-    @Column(nullable = false)
-    private String id; // 아이디
+    @Column(nullable = false, unique = true)
+    private String userName; // 로그인 아이디
 
     @Column(nullable = false)
     @Setter
@@ -52,7 +52,7 @@ public class UserAccount extends BaseTimeEntity {
     private int remainedVacationCount; // 연차 잔여 일수
 
     @ToString.Exclude
-    @OrderBy("regDate DESC")
+    @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
     private final Set<WorkSchedule> workSchedules = new LinkedHashSet<>();
 
@@ -65,27 +65,27 @@ public class UserAccount extends BaseTimeEntity {
     protected UserAccount() {
     }
 
-    private UserAccount(String id, String password, String name, String email) {
-        this.id = id;
+    private UserAccount(String userName, String password, String name, String email) {
+        this.userName = userName;
         this.password = password;
         this.name = name;
         this.email = email;
         this.remainedVacationCount = DEFAULT_VACATION_DAYS;
     }
 
-    public static UserAccount of(String id, String password, String name, String email) {
-        return new UserAccount(id, password, name, email);
+    public static UserAccount of(String userName, String password, String name, String email) {
+        return new UserAccount(userName, password, name, email);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserAccount that)) return false;
-        return this.getSeq() != null && this.getSeq() == that.getSeq();
+        return this.getId() != null && this.getId() == that.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getSeq());
+        return Objects.hash(this.getId());
     }
 }
