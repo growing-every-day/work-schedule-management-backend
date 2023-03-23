@@ -25,7 +25,11 @@ public class UserLoginLog  {
     private UserAccount userAccount;
 
     @Column(nullable = false)
+<<<<<<< main
     private String userAccountUsername;
+=======
+    private String userAccountUserName;
+>>>>>>> #14 - 엔티티 클래스 primary key 변수 네임 변경: seq -> id
 
     @Column(nullable = false)
     private String userAgent;
@@ -41,7 +45,11 @@ public class UserLoginLog  {
 
     private UserLoginLog(UserAccount userAccount, String userAgent, String ip) {
         this.userAccount = userAccount;
+<<<<<<< main
         this.userAccountUsername = userAccount.getUsername();
+=======
+        this.userAccountUserName = userAccount.getUserName();
+>>>>>>> #14 - 엔티티 클래스 primary key 변수 네임 변경: seq -> id
         this.userAgent = userAgent;
         this.ip = ip;
         this.loginTime = LocalDateTime.now();
