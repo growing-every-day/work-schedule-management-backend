@@ -22,14 +22,4 @@ class UserAccountServiceTest {
     @Autowired
     UserAccountService userAccountService;
 
-    @DisplayName("check id,password without security")
-    @Test
-    public void check_id_pw() {
-        UserAccount userAccount = UserAccount.of("lyh951212", "1234", "yeonhee", "@naver");
-        userAccountRepository.save(userAccount);
-
-        assertThat(userAccountService.isIdAndPasswordCorrect("lyh951212", "1234")).isTrue();
-        assertThat(userAccountService.isIdAndPasswordCorrect("lyh951212", "12345")).isFalse();
-
-    }
 }

@@ -87,13 +87,17 @@ public class UserAccountService {
 >>>>>>> feat #7- create and test basic UserAccountService
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class UserAccountService {
+public class UserAccountService implements UserDetailsService {
     private final UserAccountRepository userAccountRepository;
 
+<<<<<<< main
     // check id and password
     public boolean isIdAndPasswordCorrect(String id, String password) {
         UserAccount userAccount = userAccountRepository.findById(id).orElse(null);
@@ -108,5 +112,11 @@ public class UserAccountService {
 >>>>>>> feat #7- create and test basic UserAccountService
 =======
 >>>>>>> feat #7- create and test basic UserAccountService
+=======
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userAccountRepository.findByUserName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+>>>>>>> feat #7- apply spring security + jwt
     }
 }

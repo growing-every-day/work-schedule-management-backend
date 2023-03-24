@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 <<<<<<< main
 <<<<<<< main
+<<<<<<< main
     Optional<UserAccount> findByUsername(String username);
 =======
     Optional<UserAccount> findById(String id);
@@ -15,4 +16,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 =======
     Optional<UserAccount> findById(String id);
 >>>>>>> feat #7- create and test basic UserAccountService
+=======
+    Optional<UserAccount> findByUserName(String userName);
+>>>>>>> feat #7- apply spring security + jwt
 }

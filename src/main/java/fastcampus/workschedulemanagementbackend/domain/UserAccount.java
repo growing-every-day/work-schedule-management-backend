@@ -6,7 +6,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -19,7 +22,7 @@ import java.util.Set;
         @Index(columnList = "email"),
 })
 @Entity
-public class UserAccount extends BaseTimeEntity {
+public class UserAccount extends BaseTimeEntity implements UserDetails {
 
     @Transient
     private final int DEFAULT_VACATION_DAYS = 25; // 기본 연차 일수 - 25일
@@ -128,5 +131,35 @@ public class UserAccount extends BaseTimeEntity {
         }
 =======
 >>>>>>> #14 - 엔티티 클래스 primary key 변수 네임 변경: seq -> id
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 }
