@@ -3,6 +3,7 @@ package fastcampus.workschedulemanagementbackend.controller;
 import fastcampus.workschedulemanagementbackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,8 +16,9 @@ public class AuthController {
 
     // TODO : implement
     @PostMapping("/signup")
-    public void join(){
+    public Response<UserJoinResponse> join(@RequestBody UserJoinRequest request){
         //join
-        userService.join("","","","");
+        User user = userService.join(request.getUserName(), request.getPassword(), request.getEmail(), request.getName());
+        return Response.success(UserJoinResponse.fromUser(user));
     }
 }
