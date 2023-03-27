@@ -1,6 +1,7 @@
 package fastcampus.workschedulemanagementbackend.domain;
 
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
+import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,7 +50,7 @@ public class UserAccount extends BaseTimeEntity {
 
     @Setter
     @Column
-    private int remainedVacationCount; // 연차 잔여 일수
+    private Integer remainedVacationCount; // 연차 잔여 일수
 
     @ToString.Exclude
     @OrderBy("createdAt DESC")
@@ -81,11 +82,30 @@ public class UserAccount extends BaseTimeEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserAccount that)) return false;
-        return this.getId() != null && this.getId() == that.getId();
+        return this.getId() != null && this.getId().equals(that.getId());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(this.getId());
+    }
+
+    public void update(UserAccountDto userAccountDto) {
+
+        if (userAccountDto.password() != null) {
+            this.password = userAccountDto.password();
+        }
+        if (userAccountDto.name() != null) {
+            this.name = userAccountDto.name();
+        }
+        if (userAccountDto.email() != null) {
+            this.email = userAccountDto.email();
+        }
+        if (userAccountDto.role() != null) {
+            this.role = userAccountDto.role();
+        }
+        if (userAccountDto.remainedVacationCount() != null) {
+            this.remainedVacationCount = userAccountDto.remainedVacationCount();
+        }
     }
 }
