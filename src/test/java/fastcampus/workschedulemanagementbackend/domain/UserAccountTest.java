@@ -36,8 +36,8 @@ class UserAccountTest {
         // then
         UserAccount findUser = findUserList.get(0);
 
-        System.out.println("find user created time = " + findUser.getCreatedDate());
-        Assertions.assertThat(findUser.getCreatedDate()).isAfter(now);
+        System.out.println("find user created time = " + findUser.getCreatedAt());
+        Assertions.assertThat(findUser.getCreatedAt()).isAfter(now);
     }
 
 }
