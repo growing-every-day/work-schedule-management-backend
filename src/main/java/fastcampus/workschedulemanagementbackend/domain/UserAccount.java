@@ -28,7 +28,7 @@ public class UserAccount extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String userName; // 로그인 아이디
+    private String username; // 로그인 아이디
 
     @Column(nullable = false)
     @Setter
@@ -65,16 +65,16 @@ public class UserAccount extends BaseTimeEntity {
     protected UserAccount() {
     }
 
-    private UserAccount(String userName, String password, String name, String email) {
-        this.userName = userName;
+    private UserAccount(String username, String password, String name, String email) {
+        this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
         this.remainedVacationCount = DEFAULT_VACATION_DAYS;
     }
 
-    public static UserAccount of(String userName, String password, String name, String email) {
-        return new UserAccount(userName, password, name, email);
+    public static UserAccount of(String username, String password, String name, String email) {
+        return new UserAccount(username, password, name, email);
     }
 
     @Override
