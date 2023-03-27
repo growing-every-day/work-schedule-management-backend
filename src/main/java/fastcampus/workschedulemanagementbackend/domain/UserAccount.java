@@ -14,7 +14,7 @@ import java.util.Set;
 @Getter
 @ToString
 @Table(indexes = { // 빠르게 서칭이 가능하도록 인덱싱을 걸어준다.
-        @Index(columnList = "userName"),
+        @Index(columnList = "username"),
         @Index(columnList = "name"),
         @Index(columnList = "email"),
 })
