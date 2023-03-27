@@ -25,7 +25,7 @@ public class UserLoginLog  {
     private UserAccount userAccount;
 
     @Column(nullable = false)
-    private String userAccountUserName;
+    private String userAccountUsername;
 
     @Column(nullable = false)
     private String userAgent;
@@ -41,7 +41,7 @@ public class UserLoginLog  {
 
     private UserLoginLog(UserAccount userAccount, String userAgent, String ip) {
         this.userAccount = userAccount;
-        this.userAccountUserName = userAccount.getUserName();
+        this.userAccountUsername = userAccount.getUsername();
         this.userAgent = userAgent;
         this.ip = ip;
         this.loginTime = LocalDateTime.now();
