@@ -1,8 +1,8 @@
 package fastcampus.workschedulemanagementbackend.controller;
 
-import fastcampus.workschedulemanagementbackend.controller.request.UserJoinRequest;
-import fastcampus.workschedulemanagementbackend.controller.response.Response;
-import fastcampus.workschedulemanagementbackend.controller.response.UserJoinResponse;
+import fastcampus.workschedulemanagementbackend.dto.request.useraccount.UserAccountJoinRequest;
+import fastcampus.workschedulemanagementbackend.dto.response.useraccount.Response;
+import fastcampus.workschedulemanagementbackend.dto.response.useraccount.UserAccountJoinResponse;
 import fastcampus.workschedulemanagementbackend.dto.LoginDto;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import fastcampus.workschedulemanagementbackend.dto.request.useraccount.UserAccountUpdateRequest;
@@ -45,10 +45,10 @@ public class UserAccountController {
     private final PasswordEncoder passwordEncoder; // TODO: 테스트 위해 임시로 추가함. 추후 삭제할 것.
 
     @PostMapping("/signup")
-    public Response<UserJoinResponse> join(@RequestBody UserJoinRequest request){
+    public Response<UserAccountJoinResponse> join(@RequestBody UserAccountJoinRequest request){
         //join
         UserAccountDto user = userAccountService.join(request.getUsername(), request.getPassword(), request.getEmail(), request.getName());
-        return Response.success(UserJoinResponse.fromWithoutUser(user));
+        return Response.success(UserAccountJoinResponse.fromWithoutUser(user));
     }
 
     // TODO: 테스트 위해 임시로 추가함. 추후 삭제할 것.

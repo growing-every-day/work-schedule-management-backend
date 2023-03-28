@@ -3,6 +3,8 @@ package fastcampus.workschedulemanagementbackend.service;
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import fastcampus.workschedulemanagementbackend.error.BadRequestException;
+import fastcampus.workschedulemanagementbackend.error.ErrorCode;
+import fastcampus.workschedulemanagementbackend.error.wsAppException;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,16 @@ public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
 
-
+    public UserAccountDto join(String username, String password, String email, String name){
+        //회원가입하려는 username으로 회원가입된 user가 있는지
+        userAccountRepository.findByUsername(username).ifPresent(it ->{
+            throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", username));
+        });
+        //회원가입 진행 = user를 등록
+        // GITHUB COPILOT
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of(username, password, email, name));
+        return UserAccountDto.from(userAccount);
+    }
     public List<UserAccountDto> getAllUserAccounts() {
         List<UserAccount> users = userAccountRepository.findAll();
 

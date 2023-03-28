@@ -1,14 +1,16 @@
-package fastcampus.workschedulemanagementbackend.controller.request;
+package fastcampus.workschedulemanagementbackend.dto.request.useraccount;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserJoinRequest {
+public class UserAccountJoinRequest {
 
-    private String id;
+    private String username;
     private String password;
     private String email;
     private String name;
+
+
 }
