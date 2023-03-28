@@ -29,7 +29,6 @@ public class UserAccountService {
             throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", username));
         });
         //회원가입 진행 = user를 등록
-        // GITHUB COPILOT
         UserAccount userAccount = userAccountRepository.save(UserAccount.of(username, password, email, name));
         return UserAccountDto.from(userAccount);
     }
