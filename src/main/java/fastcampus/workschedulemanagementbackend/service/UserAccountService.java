@@ -23,13 +23,13 @@ public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
 
-    public UserAccountDto join(String username, String password, String email, String name){
+    public UserAccountDto join(String username, String password, String name, String email){
         //회원가입하려는 username으로 회원가입된 user가 있는지
         userAccountRepository.findByUsername(username).ifPresent(it ->{
             throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", username));
         });
         //회원가입 진행 = user를 등록
-        UserAccount userAccount = userAccountRepository.save(UserAccount.of(username, password, email, name));
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of(username, password, name, email));
         return UserAccountDto.from(userAccount);
     }
     public List<UserAccountDto> getAllUserAccounts() {

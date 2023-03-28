@@ -9,8 +9,10 @@ public class UserAccountJoinRequest {
 
     private String username;
     private String password;
-    private String email;
     private String name;
+
+    private String email;
+
 
 
 }
