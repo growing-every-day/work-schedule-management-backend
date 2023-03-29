@@ -57,10 +57,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        UserAccount userAccount = UserAccount.of("lyh951212", passwordEncoder.encode("1234"), "yeonhee", "naver");
-        userAccount.setRole(UserRoleType.ADMIN);
-        userAccountRepository.save(userAccount);
-
         // basic authentication filter 비활성화
         http.httpBasic().disable();
         // CsrfFilter 토큰을 사용하지 않으므로 비활성화
