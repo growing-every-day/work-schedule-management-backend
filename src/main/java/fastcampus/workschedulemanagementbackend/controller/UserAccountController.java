@@ -1,19 +1,23 @@
 package fastcampus.workschedulemanagementbackend.controller;
 
+import fastcampus.workschedulemanagementbackend.dto.FieldErrorDto;
 import fastcampus.workschedulemanagementbackend.dto.LoginDto;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
+import fastcampus.workschedulemanagementbackend.dto.ValidationErrorDto;
 import fastcampus.workschedulemanagementbackend.dto.request.useraccount.UserAccountUpdateRequest;
 import fastcampus.workschedulemanagementbackend.dto.response.useraccount.UserAccountDeleteResponse;
 import fastcampus.workschedulemanagementbackend.dto.response.useraccount.UserAccountGetAllUserResponse;
 import fastcampus.workschedulemanagementbackend.dto.response.useraccount.UserAccountGetResponse;
 import fastcampus.workschedulemanagementbackend.dto.response.useraccount.UserAccountUpdateResponse;
 import fastcampus.workschedulemanagementbackend.error.BadRequestException;
+import fastcampus.workschedulemanagementbackend.error.FieldValidationException;
 import fastcampus.workschedulemanagementbackend.security.UserAccountPrincipal;
 import fastcampus.workschedulemanagementbackend.service.UserAccountService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,9 +29,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
@@ -44,7 +51,7 @@ public class UserAccountController {
     // TODO: 테스트 위해 임시로 추가함. 추후 삭제할 것.
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto, HttpServletRequest req) throws ServletException {
-        log.error("User {} is trying to log in.", loginDto.getUsername());
+        log.debug("User {} is trying to log in.", loginDto.getUsername());
         UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
         Authentication auth = authenticationManager.authenticate(authReq);
@@ -87,11 +94,15 @@ public class UserAccountController {
     @PostMapping("/{id}/update")
     public ResponseEntity<UserAccountUpdateResponse> updateUserAccount(@PathVariable Long id,
                                                                        @AuthenticationPrincipal UserAccountPrincipal userAccountPrincipal,
-                                                                       @RequestBody UserAccountUpdateRequest userAccountUpdateRequest) {
+                                                                       @Valid @RequestBody UserAccountUpdateRequest userAccountUpdateRequest,
+                                                                       BindingResult bindingResult) {
 
         checkAdmin(id, userAccountPrincipal, "다른 회원을 수정할 권한이 없습니다.");
 
-        log.info("userAccountUpdateRequest: {}", userAccountUpdateRequest);
+        if (bindingResult.hasErrors()) {
+            throw new FieldValidationException("회원 정보 수정에 실패했습니다.", handleBindingResult(bindingResult));
+        }
+
         return userAccountService.updateUserAccount(id, userAccountUpdateRequest.toDto())
                 .map(updatedUserAccount -> new ResponseEntity<>(new UserAccountUpdateResponse(true, updatedUserAccount), HttpStatus.OK))
                 .orElseThrow(() -> new BadRequestException("회원 정보 수정에 실패했습니다."));
@@ -116,4 +127,16 @@ public class UserAccountController {
             throw new BadRequestException(errorMessage);
         }
     }
+
+    private ValidationErrorDto handleBindingResult(BindingResult bindingResult) {
+
+        return ValidationErrorDto
+                .of(
+                        bindingResult.
+                                getFieldErrors().stream()
+                                .map(error -> FieldErrorDto.of(error.getField(), error.getDefaultMessage()))
+                                .collect(Collectors.toList()));
+
+    }
+
 }
