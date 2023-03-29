@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/testdb
+    url: jdbc:mysql://localhost:3306/testtest
     username: root
-    password: 1234
+    password:
   jpa:
     defer-datasource-initialization: true
     hibernate:

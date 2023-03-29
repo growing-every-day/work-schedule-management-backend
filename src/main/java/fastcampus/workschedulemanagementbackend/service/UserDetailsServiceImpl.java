@@ -1,8 +1,6 @@
 package fastcampus.workschedulemanagementbackend.service;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
-import fastcampus.workschedulemanagementbackend.domain.UserDetailsImpl;
-import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import fastcampus.workschedulemanagementbackend.security.UserAccountPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserAccount userAccount =  userAccountRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        return new UserDetailsImpl(userAccount);
+        return UserAccountPrincipal.from(userAccount);
     }
 
 }
