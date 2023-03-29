@@ -1,5 +1,6 @@
 package fastcampus.workschedulemanagementbackend.security;
 
+import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import lombok.extern.slf4j.Slf4j;
@@ -38,31 +39,15 @@ public record UserAccountPrincipal(
         );
     }
 
-    public static UserAccountPrincipal from(UserAccountDto dto) {
+    public static UserAccountPrincipal from(UserAccount userAccount) {
         return UserAccountPrincipal.of(
-                dto.id(),
-                dto.username(),
-                dto.password(),
-                dto.email(),
-                dto.name(),
-                dto.role(),
-                dto.remainedVacationCount()
-        );
-    }
-
-    public UserAccountDto toDto() {
-        return UserAccountDto.of(
-                id,
-                username,
-                password,
-                name,
-                email,
-                authorities.stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .map(UserRoleType::of)
-                        .findFirst()
-                        .orElseThrow(),
-                remainedVacationCount
+                userAccount.getId(),
+                userAccount.getUsername(),
+                userAccount.getPassword(),
+                userAccount.getEmail(),
+                userAccount.getName(),
+                userAccount.getRole(),
+                userAccount.getRemainedVacationCount()
         );
     }
 

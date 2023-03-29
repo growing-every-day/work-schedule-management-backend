@@ -44,8 +44,11 @@ public class UserAccountService {
         return UserAccountDto.from(userAccount);
     }
 
-    public List<UserAccountDto> getAllUserAccounts() {
-        List<UserAccount> users = userAccountRepository.findAll();
+    public List<UserAccountDto> getAllUserAccounts(String name) {
+
+        List<UserAccount> users = name != null ?
+                userAccountRepository.findAllByNameContainsIgnoreCase(name) :
+                userAccountRepository.findAll();
 
         if (users.isEmpty()) {
             throw new BadRequestException("회원이 존재하지 않습니다");
@@ -57,7 +60,6 @@ public class UserAccountService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public Optional<UserAccountDto> getUserAccountById(Long id) {
 
         if (id == null) {
@@ -68,6 +70,7 @@ public class UserAccountService {
                 .map(UserAccountDto::fromWithoutPassword)
                 .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다", id))));
     }
+
     @Transactional
     public Optional<UserAccountDto> updateUserAccount(Long id, UserAccountDto userAccountDto) {
 
@@ -88,6 +91,7 @@ public class UserAccountService {
                 .map(UserAccountDto::fromWithoutPassword)
                 .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다", id))));
     }
+
     @Transactional
     public Optional<Boolean> deleteUserAccount(Long id) {
 

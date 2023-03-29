@@ -2,7 +2,6 @@ package fastcampus.workschedulemanagementbackend.jwt;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
-import fastcampus.workschedulemanagementbackend.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -83,7 +82,6 @@ public class JwtTokenProvider {
      */
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(getUsernameByToken(token));
-        ///UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(getUsernameByToken(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

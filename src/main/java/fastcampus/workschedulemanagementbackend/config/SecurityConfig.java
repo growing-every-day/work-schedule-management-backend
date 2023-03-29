@@ -1,19 +1,15 @@
 package fastcampus.workschedulemanagementbackend.config;
 
-import fastcampus.workschedulemanagementbackend.domain.UserAccount;
-import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
-import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import fastcampus.workschedulemanagementbackend.jwt.JwtAuthorizationFilter;
 import fastcampus.workschedulemanagementbackend.jwt.JwtTokenProvider;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
-import fastcampus.workschedulemanagementbackend.security.UserAccountPrincipal;
 import fastcampus.workschedulemanagementbackend.service.UserAccountService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,8 +21,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -66,14 +60,14 @@ public class SecurityConfig {
         // rest api 프로젝트이기 때문에 비활성화
         http.formLogin().disable();
         // RememberMeAuthenticationFilter: 일반적인 세션보다 훨씬 오랫동안 로그인 사실을 기억하도록 활성화
-       // http.rememberMe();
+        // http.rememberMe();
 
         // authorize
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET,"/", "/home").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh" ,"/api/siginup").permitAll()
-                        .requestMatchers("/api/admin").hasRole("ADMIN")
-                        .anyRequest().authenticated());
+                .requestMatchers(HttpMethod.GET, "/", "/home").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh", "/api/signup").permitAll()
+                .requestMatchers("/api/admin").hasRole("ADMIN")
+                .anyRequest().authenticated());
 
         // 예외처리
         http.exceptionHandling()
