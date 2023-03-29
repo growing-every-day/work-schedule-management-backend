@@ -22,7 +22,7 @@ import java.util.Set;
         @Index(columnList = "email"),
 })
 @Entity
-public class UserAccount extends BaseTimeEntity implements UserDetails {
+public class UserAccount extends BaseTimeEntity {
 
     @Transient
     private final int DEFAULT_VACATION_DAYS = 25; // 기본 연차 일수 - 25일
@@ -59,6 +59,10 @@ public class UserAccount extends BaseTimeEntity implements UserDetails {
     @Column
     private Integer remainedVacationCount; // 연차 잔여 일수
 
+    @Setter
+    @Column
+    private String refreshToken;
+
     @ToString.Exclude
     @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
@@ -69,7 +73,6 @@ public class UserAccount extends BaseTimeEntity implements UserDetails {
     @OrderBy("loginTime DESC")
     @OneToMany(mappedBy = "userAccount")
     private final Set<UserLoginLog> userLoginLogs = new LinkedHashSet<>();
-
     protected UserAccount() {
     }
 
@@ -131,35 +134,5 @@ public class UserAccount extends BaseTimeEntity implements UserDetails {
         }
 =======
 >>>>>>> #14 - 엔티티 클래스 primary key 변수 네임 변경: seq -> id
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.userName;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
     }
 }

@@ -47,6 +47,7 @@ public class UserLoginLog  {
         this.userAccount = userAccount;
 <<<<<<< main
 <<<<<<< main
+<<<<<<< main
         this.userAccountUsername = userAccount.getUsername();
 =======
         this.userAccountUserName = userAccount.getUserName();
@@ -54,6 +55,9 @@ public class UserLoginLog  {
 =======
         this.userAccountUserName = userAccount.getUsername();
 >>>>>>> feat #7- apply spring security + jwt
+=======
+        this.userAccountUserName = userAccount.getUserName();
+>>>>>>> feat #7 - spring security + jwt 기능 추가
         this.userAgent = userAgent;
         this.ip = ip;
         this.loginTime = LocalDateTime.now();
