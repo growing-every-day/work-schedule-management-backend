@@ -1,5 +1,8 @@
 package fastcampus.workschedulemanagementbackend.controller;
 
+import fastcampus.workschedulemanagementbackend.dto.request.useraccount.UserAccountJoinRequest;
+import fastcampus.workschedulemanagementbackend.dto.response.useraccount.Response;
+import fastcampus.workschedulemanagementbackend.dto.response.useraccount.UserAccountJoinResponse;
 import fastcampus.workschedulemanagementbackend.dto.FieldErrorDto;
 import fastcampus.workschedulemanagementbackend.dto.LoginDto;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
@@ -47,6 +50,15 @@ public class UserAccountController {
     private final UserAccountService userAccountService;
     private final AuthenticationManager authenticationManager; // TODO: 테스트 위해 임시로 추가함. 추후 삭제할 것.
     private final PasswordEncoder passwordEncoder; // TODO: 테스트 위해 임시로 추가함. 추후 삭제할 것.
+
+    @PostMapping("/signup")
+    public Response<UserAccountJoinResponse> join(@RequestBody UserAccountJoinRequest request){
+        //join
+        log.error("User {} is trying to join.", request.getUsername());
+        UserAccountDto user = userAccountService.join(request.toDto());
+        log.error("User {} joined successfully.", request.getUsername());
+        return Response.success(UserAccountJoinResponse.fromWithoutUser(user));
+    }
 
     // TODO: 테스트 위해 임시로 추가함. 추후 삭제할 것.
     @PostMapping("/login")
