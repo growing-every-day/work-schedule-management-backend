@@ -89,8 +89,8 @@ public class UserAccountController {
     }
 
     @GetMapping
-    public ResponseEntity<UserAccountGetAllUserResponse> getAllUserAccounts() {
-        List<UserAccountDto> userAccountDtoList = userAccountService.getAllUserAccounts();
+    public ResponseEntity<UserAccountGetAllUserResponse> getAllUserAccounts(@RequestParam(required = false) String name) {
+        List<UserAccountDto> userAccountDtoList = userAccountService.getAllUserAccounts(name);
         return new ResponseEntity<>(new UserAccountGetAllUserResponse(userAccountDtoList), HttpStatus.OK);
     }
 

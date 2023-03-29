@@ -8,3 +8,18 @@ insert into user_account (id, username, password, name, email, role, remained_va
                           modified_at)
 values (2, 'admin', '{noop}admin', 'admin', 'admin@mail.com', 'ADMIN', 25,  now(), now())
 ;
+
+insert into user_account (id, username, password, name, email, role, remained_vacation_count, created_at,
+                          modified_at)
+values (3, 'chan2', '{noop}chan', 'chan', 'chan@gmail.com', 'USER', 25, now(), now())
+;
+
+insert into user_account (id, username, password, name, email, role, remained_vacation_count, created_at,
+                          modified_at)
+values (4, 'chan3', '{noop}chan', 'chan', 'chan@gmail.com', 'USER', 25, now(), now())
+;
+
+insert into user_account (id, username, password, name, email, role, remained_vacation_count, created_at,
+                          modified_at)
+values (5, '4chan3', '{noop}chan', 'chan', 'chan@gmail.com', 'USER', 25, now(), now())
+;

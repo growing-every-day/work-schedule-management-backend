@@ -44,8 +44,11 @@ public class UserAccountService {
         return UserAccountDto.from(userAccount);
     }
 
-    public List<UserAccountDto> getAllUserAccounts() {
-        List<UserAccount> users = userAccountRepository.findAll();
+    public List<UserAccountDto> getAllUserAccounts(String name) {
+
+        List<UserAccount> users = name != null ?
+                userAccountRepository.findAllByNameContainsIgnoreCase(name) :
+                userAccountRepository.findAll();
 
         if (users.isEmpty()) {
             throw new BadRequestException("회원이 존재하지 않습니다");
