@@ -6,5 +6,5 @@ values (2, 'chan', '{noop}chan', 'chan', 'chan@gmail.com', 'USER', 25, now(), no
 ;
 insert into user_account (id, username, password, name, email, role, remained_vacation_count, created_at,
                           modified_at)
-values (1, 'admin', '{noop}admin', 'admin', 'admin@mail.com', 'ADMIN', 25,  now(), now())
+values (3, 'admin', '{noop}admin', 'admin', 'admin@mail.com', 'ADMIN', 25,  now(), now())
 ;

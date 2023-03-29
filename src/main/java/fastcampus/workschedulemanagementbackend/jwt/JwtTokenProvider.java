@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -30,7 +31,7 @@ public class JwtTokenProvider {
     // 리프레시 토큰 유효시간 3분
     static final long REFRESH_TOKEN_VALID_MILLIE_SEC_TIME = 1000L * 180;
 
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserDetailsService userDetailsService;
 
     /**
      * 객체 초기화, secretKey를 Base64로 인코딩한다.
@@ -64,7 +65,7 @@ public class JwtTokenProvider {
      * @return
      */
     public String createRefreshToken(UserAccount userAccount) {
-        Claims claims = Jwts.claims().setSubject(userAccount.getId().toString());
+        Claims claims = Jwts.claims().setSubject(userAccount.getUsername());
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)
@@ -81,7 +82,8 @@ public class JwtTokenProvider {
      * @return
      */
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(getUsernameByToken(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(getUsernameByToken(token));
+        ///UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(getUsernameByToken(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

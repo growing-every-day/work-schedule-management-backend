@@ -32,11 +32,7 @@ public class UserAccount extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
-<<<<<<< main
     private String username; // 로그인 아이디
-=======
-    private String userName; // 로그인 아이디
->>>>>>> #14 - 엔티티 클래스 primary key 변수 네임 변경: seq -> id
 
     @Column(nullable = false)
     @Setter
@@ -76,43 +72,28 @@ public class UserAccount extends BaseTimeEntity {
     protected UserAccount() {
     }
 
-<<<<<<< main
     private UserAccount(String username, String password, String name, String email) {
         this.username = username;
-=======
-    private UserAccount(String userName, String password, String name, String email) {
-        this.userName = userName;
->>>>>>> #14 - 엔티티 클래스 primary key 변수 네임 변경: seq -> id
         this.password = password;
         this.name = name;
         this.email = email;
         this.remainedVacationCount = DEFAULT_VACATION_DAYS;
     }
 
-<<<<<<< main
     public static UserAccount of(String username, String password, String name, String email) {
         return new UserAccount(username, password, name, email);
-=======
-    public static UserAccount of(String userName, String password, String name, String email) {
-        return new UserAccount(userName, password, name, email);
->>>>>>> #14 - 엔티티 클래스 primary key 변수 네임 변경: seq -> id
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserAccount that)) return false;
-<<<<<<< main
         return this.getId() != null && this.getId().equals(that.getId());
-=======
-        return this.getId() != null && this.getId() == that.getId();
->>>>>>> #14 - 엔티티 클래스 primary key 변수 네임 변경: seq -> id
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(this.getId());
-<<<<<<< main
     }
 
     public void update(UserAccountDto userAccountDto) {
@@ -132,7 +113,5 @@ public class UserAccount extends BaseTimeEntity {
         if (userAccountDto.remainedVacationCount() != null) {
             this.remainedVacationCount = userAccountDto.remainedVacationCount();
         }
-=======
->>>>>>> #14 - 엔티티 클래스 primary key 변수 네임 변경: seq -> id
     }
 }

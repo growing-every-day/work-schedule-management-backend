@@ -1,11 +1,18 @@
 package fastcampus.workschedulemanagementbackend.service;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
+import fastcampus.workschedulemanagementbackend.dto.LoginRequestDto;
+import fastcampus.workschedulemanagementbackend.dto.LoginResponseDto;
+import fastcampus.workschedulemanagementbackend.dto.TokenDto;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import fastcampus.workschedulemanagementbackend.error.BadRequestException;
+import fastcampus.workschedulemanagementbackend.jwt.JwtTokenProvider;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +22,11 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Service
 public class UserAccountService {
     private final UserAccountRepository userAccountRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     public List<UserAccountDto> getAllUserAccounts() {
         List<UserAccount> users = userAccountRepository.findAll();
@@ -33,6 +41,7 @@ public class UserAccountService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Optional<UserAccountDto> getUserAccountById(Long id) {
 
         if (id == null) {
@@ -43,7 +52,6 @@ public class UserAccountService {
                 .map(UserAccountDto::fromWithoutPassword)
                 .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다", id))));
     }
-
     @Transactional
     public Optional<UserAccountDto> updateUserAccount(Long id, UserAccountDto userAccountDto) {
 
@@ -64,7 +72,6 @@ public class UserAccountService {
                 .map(UserAccountDto::fromWithoutPassword)
                 .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다", id))));
     }
-
     @Transactional
     public Optional<Boolean> deleteUserAccount(Long id) {
 
@@ -79,17 +86,6 @@ public class UserAccountService {
                 })
                 .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다", id))));
     }
-    // check id and password
-    public boolean isIdAndPasswordCorrect(String id, String password) {
-        UserAccount userAccount = userAccountRepository.findById(id).orElse(null);
-        if (userAccount == null) {
-            return false;
-        }
-        if (userAccount.getPassword() != password) {
-            return false;
-        }
-        return true;
-    }
 
     /**
      * 로그인 처리 + 엑세스, 리프레시 토큰 생성 + db저장
@@ -98,7 +94,7 @@ public class UserAccountService {
      * @throws Exception
      */
     public LoginResponseDto login(LoginRequestDto request) throws Exception {
-        UserAccount userAccount = userAccountRepository.findByUserName(request.getUsername()).orElseThrow(() ->
+        UserAccount userAccount = userAccountRepository.findByUsername(request.getUsername()).orElseThrow(() ->
                 new BadCredentialsException("잘못된 계정정보입니다."));
 
         if (!passwordEncoder.matches(request.getPassword(), userAccount.getPassword())) {
@@ -109,12 +105,12 @@ public class UserAccountService {
 
         return LoginResponseDto.builder()
                 .id(userAccount.getId())
-                .userName(userAccount.getUserName())
+                .userName(userAccount.getUsername())
                 .name(userAccount.getName())
                 .email(userAccount.getEmail())
                 .role(userAccount.getRole())
                 .token(TokenDto.builder()
-                        .accessToken(jwtTokenProvider.createAccessToken(userAccount.getUserName(), userAccount.getRole()))
+                        .accessToken(jwtTokenProvider.createAccessToken(userAccount.getUsername(), userAccount.getRole()))
                         .refreshToken(newRefreshToken)
                         .build())
                 .build();
@@ -156,7 +152,7 @@ public class UserAccountService {
             userName = ex.getClaims().getSubject();
         }
 
-        UserAccount userAccount = userAccountRepository.findByUserName(userName).orElseThrow(() ->
+        UserAccount userAccount = userAccountRepository.findByUsername(userName).orElseThrow(() ->
                 new BadCredentialsException("잘못된 계정정보입니다."));
         
         String newRefreshToken = createRefreshToken(userAccount);

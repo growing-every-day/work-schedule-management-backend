@@ -1,6 +1,5 @@
 package fastcampus.workschedulemanagementbackend.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import fastcampus.workschedulemanagementbackend.service.UserAccountService;
@@ -12,16 +11,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
 
 /**
  * JWT를 이용한 인증
@@ -33,7 +28,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserAccountService userAccountService;
     private final UserAccountRepository userAccountRepository;
-
 
     /**
      * 페이지에 접근 시도시 "Authorization"헤더에 있는 access token을 검사한다.
@@ -57,7 +51,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             } catch (ExpiredJwtException exp) {
                 // access token이 만료됨 -> refresh token 확인
-                 UserAccount userAccount = userAccountRepository.findByUserName(exp.getClaims().getSubject()).orElseThrow(() ->
+                 UserAccount userAccount = userAccountRepository.findByUsername(exp.getClaims().getSubject()).orElseThrow(() ->
                         new BadCredentialsException("잘못된 계정정보입니다."));
 
                 try {
@@ -69,7 +63,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     }
 
                     // access 토큰 생성
-                    String newAccessToken = jwtTokenProvider.createAccessToken(userAccount.getUserName(), userAccount.getRole());
+                    String newAccessToken = jwtTokenProvider.createAccessToken(userAccount.getUsername(), userAccount.getRole());
                     Authentication auth = jwtTokenProvider.getAuthentication(newAccessToken);
                     SecurityContextHolder.getContext().setAuthentication(auth);
 

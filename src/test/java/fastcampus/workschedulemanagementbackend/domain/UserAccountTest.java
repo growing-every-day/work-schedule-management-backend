@@ -1,6 +1,7 @@
 package fastcampus.workschedulemanagementbackend.domain;
 
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,28 +35,9 @@ class UserAccountTest {
         // then
         UserAccount findUser = findUserList.get(0);
 
-<<<<<<< main
-<<<<<<< main
         System.out.println("find user created time = " + findUser.getCreatedAt());
-<<<<<<< main
         Assertions.assertThat(findUser.getCreatedAt()).isAfter(now);
-=======
-        System.out.println("find user created time = " + findUser.getCreatedDate());
-        assertThat(findUser.getCreatedDate()).isAfter(now);
-<<<<<<< main
->>>>>>> feat #7- create and test basic UserAccountService
-=======
->>>>>>> feat #7- create and test basic UserAccountService
-=======
-        System.out.println("find user created time = " + findUser.getCreatedAt());
-<<<<<<< main
-        assertThat(findUser.getCreatedAt()).isAfter(now);
->>>>>>> fix #7 - fix code after rebase main branch
-=======
->>>>>>> feat #7- create and test basic UserAccountService
-=======
-        assertThat(findUser.getCreatedAt()).isAfter(now);
->>>>>>> fix #7 - fix code after rebase main branch
+
     }
 
 }
