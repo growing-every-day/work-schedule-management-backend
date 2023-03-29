@@ -49,7 +49,6 @@ public class UserAccountController {
 
     private final UserAccountService userAccountService;
     private final AuthenticationManager authenticationManager; // TODO: 테스트 위해 임시로 추가함. 추후 삭제할 것.
-    private final PasswordEncoder passwordEncoder; // TODO: 테스트 위해 임시로 추가함. 추후 삭제할 것.
 
     @PostMapping("/signup")
     public Response<UserAccountJoinResponse> join(@RequestBody UserAccountJoinRequest request){

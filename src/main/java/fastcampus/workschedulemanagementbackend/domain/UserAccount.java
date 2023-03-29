@@ -6,7 +6,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -53,6 +56,10 @@ public class UserAccount extends BaseTimeEntity {
     @Column
     private Integer remainedVacationCount; // 연차 잔여 일수
 
+    @Setter
+    @Column
+    private String refreshToken;
+
     @ToString.Exclude
     @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
@@ -63,7 +70,6 @@ public class UserAccount extends BaseTimeEntity {
     @OrderBy("loginTime DESC")
     @OneToMany(mappedBy = "userAccount")
     private final Set<UserLoginLog> userLoginLogs = new LinkedHashSet<>();
-
     protected UserAccount() {
     }
 
