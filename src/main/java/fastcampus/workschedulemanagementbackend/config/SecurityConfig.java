@@ -74,7 +74,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET,"/", "/home", "/signup", "/refresh").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login","/api/login","/api/refresh" ,"/api/siginup").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ROLE_ADMIN")
+                        .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         // 예외처리
