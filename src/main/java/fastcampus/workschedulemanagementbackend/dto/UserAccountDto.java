@@ -17,6 +17,10 @@ public record UserAccountDto(
         LocalDateTime modifiedAt
 ) {
 
+    public static UserAccountDto of(String username, String password, String name, String email) {
+        return new UserAccountDto(null, username, password, name, email, null, null, null, null);
+    }
+
     public static UserAccountDto of(Long id, String username, String password, String name, String email, UserRoleType role, Integer remainedVacationCount) {
         return new UserAccountDto(id, username, password, name, email, role, remainedVacationCount, null, null);
     }
@@ -55,5 +59,15 @@ public record UserAccountDto(
                 entity.getModifiedAt()
         );
     }
+
+    public UserAccount toEntity() {
+        return UserAccount.of(
+                username,
+                password,
+                name,
+                email
+        );
+    }
+
 
 }

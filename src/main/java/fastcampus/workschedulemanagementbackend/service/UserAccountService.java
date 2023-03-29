@@ -7,6 +7,8 @@ import fastcampus.workschedulemanagementbackend.dto.TokenDto;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import fastcampus.workschedulemanagementbackend.error.BadRequestException;
 import fastcampus.workschedulemanagementbackend.jwt.JwtTokenProvider;
+import fastcampus.workschedulemanagementbackend.error.ErrorCode;
+import fastcampus.workschedulemanagementbackend.error.wsAppException;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,20 @@ public class UserAccountService {
     private final UserAccountRepository userAccountRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+
+    @Transactional
+    public UserAccountDto join(UserAccountDto userAccountDto){
+        //회원가입하려는 username으로 회원가입된 user가 있는지
+        log.error("User {} is trying to join in AccountService", userAccountDto.username());
+        userAccountRepository.findByUsername(userAccountDto.username()).ifPresent(it ->{
+            throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userAccountDto.username()));
+        });
+        log.error("User {} is not found in AccountService", userAccountDto.username());
+        //회원가입 진행 = user를 등록
+        UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity());
+        log.error("User {} is saved in AccountService", userAccount.toString());
+        return UserAccountDto.from(userAccount);
+    }
 
     public List<UserAccountDto> getAllUserAccounts() {
         List<UserAccount> users = userAccountRepository.findAll();

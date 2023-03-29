@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -43,6 +44,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserAccountRepository userAccountRepository;
