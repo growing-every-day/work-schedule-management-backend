@@ -27,11 +27,20 @@ public class ErrorHandler {
         );
     }
 
+    @ExceptionHandler(FieldValidationException.class)
+    public ResponseEntity<ErrorResponse> handleFieldValidationException(FieldValidationException ex) {
+
+        return new ResponseEntity<>(
+                ErrorResponse.of(HttpStatus.BAD_REQUEST.value(),ex.getErrorMessage(), ex.getValidationErrorDto().fieldErrors()),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
 
         return new ResponseEntity<>(
-                new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Server Error"),
+                ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Server Error"),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
