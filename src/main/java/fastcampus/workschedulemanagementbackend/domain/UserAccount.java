@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Getter
 @ToString
-@Table(name = "user_account",
+@Table(
         indexes = { // 빠르게 서칭이 가능하도록 인덱싱을 걸어준다.
         @Index(columnList = "username"),
         @Index(columnList = "name"),

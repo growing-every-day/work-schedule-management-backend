@@ -2,6 +2,7 @@ package fastcampus.workschedulemanagementbackend.security;
 
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 public record UserAccountPrincipal(
         Long id,
         String username,
@@ -22,7 +24,6 @@ public record UserAccountPrincipal(
 
     public static UserAccountPrincipal of(Long id, String username, String password, String email, String name, UserRoleType role, Integer remainedVacationCount) {
         Set<UserRoleType> roleTypes = Set.of(role);
-
         return new UserAccountPrincipal(
                 id,
                 username,

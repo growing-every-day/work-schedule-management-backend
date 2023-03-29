@@ -23,15 +23,20 @@ public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
 
-    public UserAccountDto join(String username, String password, String name, String email){
+    @Transactional
+    public UserAccountDto join(UserAccountDto userAccountDto){
         //회원가입하려는 username으로 회원가입된 user가 있는지
-        userAccountRepository.findByUsername(username).ifPresent(it ->{
-            throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", username));
+        log.error("User {} is trying to join in AccountService", userAccountDto.username());
+        userAccountRepository.findByUsername(userAccountDto.username()).ifPresent(it ->{
+            throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userAccountDto.username()));
         });
+        log.error("User {} is not found in AccountService", userAccountDto.username());
         //회원가입 진행 = user를 등록
-        UserAccount userAccount = userAccountRepository.save(UserAccount.of(username, password, name, email));
+        UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity());
+        log.error("User {} is saved in AccountService", userAccount.toString());
         return UserAccountDto.from(userAccount);
     }
+
     public List<UserAccountDto> getAllUserAccounts() {
         List<UserAccount> users = userAccountRepository.findAll();
 
