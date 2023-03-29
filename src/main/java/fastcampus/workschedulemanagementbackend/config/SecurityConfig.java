@@ -68,9 +68,9 @@ public class SecurityConfig {
 
         // authorize
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET,"/", "/home", "/signup", "/refresh").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/login","/api/login","/api/refresh" ,"/api/siginup").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/", "/home").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh" ,"/api/siginup").permitAll()
+                        .requestMatchers("/api/admin").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         // 예외처리
