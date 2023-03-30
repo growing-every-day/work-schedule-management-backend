@@ -33,9 +33,7 @@ public class UserAccountController {
     @PostMapping("/signup")
     public Response<UserAccountJoinResponse> join(@RequestBody UserAccountJoinRequest request) {
         //join
-        log.error("User {} is trying to join.", request.getUsername());
         UserAccountDto user = userAccountService.join(request.toDto());
-        log.error("User {} joined successfully.", request.getUsername());
         return Response.success(UserAccountJoinResponse.fromWithoutUser(user));
     }
 
