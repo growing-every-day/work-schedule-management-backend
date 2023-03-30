@@ -33,14 +33,11 @@ public class UserAccountService {
     @Transactional
     public UserAccountDto join(UserAccountDto userAccountDto){
         //회원가입하려는 username으로 회원가입된 user가 있는지
-        log.error("User {} is trying to join in AccountService", userAccountDto.username());
         userAccountRepository.findByUsername(userAccountDto.username()).ifPresent(it ->{
             throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userAccountDto.username()));
         });
-        log.error("User {} is not found in AccountService", userAccountDto.username());
         //회원가입 진행 = user를 등록
         UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity());
-        log.error("User {} is saved in AccountService", userAccount.toString());
         return UserAccountDto.from(userAccount);
     }
 
@@ -82,7 +79,6 @@ public class UserAccountService {
             throw new BadRequestException("회원 정보는 null 일 수 없습니다");
         }
 
-        log.info("userAccountDto: {}", userAccountDto);
         return Optional.ofNullable(userAccountRepository.findById(id)
                 .map(existingUserAccount -> {
                     existingUserAccount.update(userAccountDto);

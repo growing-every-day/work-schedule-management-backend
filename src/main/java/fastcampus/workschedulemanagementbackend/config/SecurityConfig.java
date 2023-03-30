@@ -71,9 +71,7 @@ public class SecurityConfig {
         // authorize
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .requestMatchers(HttpMethod.GET, "/", "/home").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh", "/api/signup").permitAll()
-                .requestMatchers("/api/admin").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh", "/api/users/signup").permitAll()
                 .anyRequest().authenticated());
 
         // 예외처리
