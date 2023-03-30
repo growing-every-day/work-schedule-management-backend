@@ -20,6 +20,7 @@ public class JpaConfig {
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getPrincipal)
+                .filter(principal -> principal instanceof UserAccountPrincipal)
                 .map(UserAccountPrincipal.class::cast)
                 .map(UserAccountPrincipal::getId);
     }
