@@ -12,6 +12,7 @@ public class LoginRequestDto {
     private String username; // 아이디
     private String password; // 패스워드
 
+
     protected LoginRequestDto() {
     }
 
