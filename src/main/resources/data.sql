@@ -23,3 +23,8 @@ insert into user_account (id, username, password, name, email, role, remained_va
                           modified_at)
 values (5, 'chan3', '{noop}chan3', '김순자', 'chan@gmail.com', 'USER', 25, now(), now())
 ;
+
+
+--work_schedule
+insert into work_schedule (id, user_account_id, category, start_date, end_date, created_by, created_at)
+values (1, 1, 'DUTY', now(), now(), 1, now());

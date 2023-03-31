@@ -20,7 +20,7 @@ public abstract class BaseWriterEntity extends BaseTimeEntity{
     private Long createdBy; // 생성자
     
     @LastModifiedBy
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long modifiedBy; // 수정자
 
 }

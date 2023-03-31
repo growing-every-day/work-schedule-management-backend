@@ -13,7 +13,9 @@ import java.util.Objects;
 @ToString(callSuper = true)
 @Table(indexes = {
         @Index(columnList = "category"),
-        @Index(columnList = "user_account_id")
+        @Index(columnList = "user_account_id"),
+        @Index(columnList = "start_date"),
+        @Index(columnList = "end_date")
 })
 @Entity
 public class WorkSchedule extends BaseWriterEntity {
@@ -22,36 +24,42 @@ public class WorkSchedule extends BaseWriterEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
-    @JoinColumn(name = "user_account_id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private UserAccount userAccount;
-
+//    @Setter
+//    @Column(nullable = false)
+//    private String name; // 이름
+//
+//    @Setter
+//    @Column(nullable = false)
+//    private String email; // 이메일
     @Setter
     @Column(nullable = false, columnDefinition = "ENUM('DUTY','LEAVE')")
     @Enumerated(EnumType.STRING)
     private ScheduleType category; // 연차/당직 카테고리
 
     @Setter
-    @Column(nullable = false)
-    private LocalDate startDate; // 시작일
+    @Column(nullable = false, name = "start_date")
+    private LocalDate start; // 시작일
 
     @Setter
-    @Column(nullable = false)
-    private LocalDate endDate; // 종료일
+    @Column(nullable = false, name = "end_date")
+    private LocalDate end; // 종료일
 
+    @Setter
+    @ToString.Exclude
+    @JoinColumn(name = "user_account_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private UserAccount userAccount;
     protected WorkSchedule() {
     }
 
-    private WorkSchedule(UserAccount userAccount, ScheduleType category, LocalDate startDate, LocalDate endDate) {
-        this.userAccount = userAccount;
+    private WorkSchedule(ScheduleType category, LocalDate startDate, LocalDate endDate) {
         this.category = category;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.start = startDate;
+        this.end = endDate;
     }
 
-    public static WorkSchedule of(UserAccount userAccount, ScheduleType category, LocalDate startDate, LocalDate endDate) {
-        return new WorkSchedule(userAccount, category, startDate, endDate);
+    public static WorkSchedule of(ScheduleType category, LocalDate startDate, LocalDate endDate) {
+        return new WorkSchedule(category, startDate, endDate);
     }
 
     @Override

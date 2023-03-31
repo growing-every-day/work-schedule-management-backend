@@ -24,6 +24,6 @@ public abstract class BaseTimeEntity{
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime modifiedAt;  // 수정일시
 }
