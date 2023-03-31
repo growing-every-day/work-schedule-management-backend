@@ -14,6 +14,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,7 @@ public class UserAccountService {
             throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userAccountDto.username()));
         });
         //회원가입 진행 = user를 등록
-        UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity());
+        UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity(passwordEncoder));
         return UserAccountDto.from(userAccount);
     }
 
@@ -112,7 +113,6 @@ public class UserAccountService {
     public LoginResponseDto login(LoginRequestDto request) throws Exception {
         UserAccount userAccount = userAccountRepository.findByUsername(request.getUsername()).orElseThrow(() ->
                 new BadCredentialsException("잘못된 계정정보입니다."));
-
         if (!passwordEncoder.matches(request.getPassword(), userAccount.getPassword())) {
             throw new BadCredentialsException("잘못된 계정정보입니다.");
         }
