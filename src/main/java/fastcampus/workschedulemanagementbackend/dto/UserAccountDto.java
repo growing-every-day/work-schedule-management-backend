@@ -61,6 +61,15 @@ public record UserAccountDto(
         );
     }
 
+    public UserAccount toEntity() {
+        return UserAccount.of(
+                username,
+                password,
+                name,
+                email
+        );
+    }
+
     public UserAccount toEntity(PasswordEncoder passwordEncoder) {
         return UserAccount.of(
                 username,

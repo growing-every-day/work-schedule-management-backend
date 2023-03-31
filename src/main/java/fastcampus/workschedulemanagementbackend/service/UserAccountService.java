@@ -1,5 +1,6 @@
 package fastcampus.workschedulemanagementbackend.service;
 
+import fastcampus.workschedulemanagementbackend.aop.LoginLog;
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.dto.LoginRequestDto;
 import fastcampus.workschedulemanagementbackend.dto.LoginResponseDto;
@@ -110,6 +111,7 @@ public class UserAccountService {
      * @return
      * @throws Exception
      */
+    @LoginLog
     public LoginResponseDto login(LoginRequestDto request) throws Exception {
         UserAccount userAccount = userAccountRepository.findByUsername(request.getUsername()).orElseThrow(() ->
                 new BadCredentialsException("잘못된 계정정보입니다."));
