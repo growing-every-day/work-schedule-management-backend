@@ -1,5 +1,7 @@
 package fastcampus.workschedulemanagementbackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import fastcampus.workschedulemanagementbackend.domain.constants.ScheduleType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,15 +24,9 @@ public class WorkSchedule extends BaseWriterEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id")
+    private Long eventId;
 
-//    @Setter
-//    @Column(nullable = false)
-//    private String name; // 이름
-//
-//    @Setter
-//    @Column(nullable = false)
-//    private String email; // 이메일
     @Setter
     @Column(nullable = false, columnDefinition = "ENUM('DUTY','LEAVE')")
     @Enumerated(EnumType.STRING)
@@ -38,39 +34,42 @@ public class WorkSchedule extends BaseWriterEntity {
 
     @Setter
     @Column(nullable = false, name = "start_date")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy/MM/dd", timezone="Asia/Seoul")
     private LocalDate start; // 시작일
 
     @Setter
     @Column(nullable = false, name = "end_date")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy/MM/dd", timezone="Asia/Seoul")
     private LocalDate end; // 종료일
 
     @Setter
-    @ToString.Exclude
     @JoinColumn(name = "user_account_id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    //@JsonBackReference
     private UserAccount userAccount;
     protected WorkSchedule() {
     }
 
-    private WorkSchedule(ScheduleType category, LocalDate startDate, LocalDate endDate) {
+    private WorkSchedule(UserAccount userAccount, ScheduleType category, LocalDate startDate, LocalDate endDate) {
+        this.userAccount = userAccount;
         this.category = category;
         this.start = startDate;
         this.end = endDate;
     }
 
-    public static WorkSchedule of(ScheduleType category, LocalDate startDate, LocalDate endDate) {
-        return new WorkSchedule(category, startDate, endDate);
+    public static WorkSchedule of(UserAccount userAccount, ScheduleType category, LocalDate startDate, LocalDate endDate) {
+        return new WorkSchedule(userAccount, category, startDate, endDate);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof WorkSchedule that)) return false;
-        return this.getId() != null && this.getId().equals(that.getId());
+        return this.getEventId() != null && this.getEventId().equals(that.getEventId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getId());
+        return Objects.hash(this.getEventId());
     }
 }

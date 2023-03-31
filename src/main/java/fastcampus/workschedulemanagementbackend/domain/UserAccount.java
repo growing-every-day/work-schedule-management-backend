@@ -62,7 +62,6 @@ public class UserAccount extends BaseTimeEntity {
     @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
     private final Set<WorkSchedule> workSchedules = new LinkedHashSet<>();
 
-
     @ToString.Exclude
     @OrderBy("loginTime DESC")
     @OneToMany(mappedBy = "userAccount")
@@ -76,6 +75,11 @@ public class UserAccount extends BaseTimeEntity {
         this.name = name;
         this.email = email;
         this.remainedVacationCount = DEFAULT_VACATION_DAYS;
+    }
+
+    private UserAccount(String name, String email){
+        this.name = name;
+        this.email = email;
     }
 
     public static UserAccount of(String username, String password, String name, String email) {

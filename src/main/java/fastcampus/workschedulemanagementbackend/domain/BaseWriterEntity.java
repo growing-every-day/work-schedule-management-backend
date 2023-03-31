@@ -15,12 +15,20 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @MappedSuperclass
 public abstract class BaseWriterEntity extends BaseTimeEntity{
     
-    @CreatedBy
+
     @Column(nullable = false, updatable = false)
-    private Long createdBy; // 생성자
-    
+    private String createdBy; // 생성자
+
+    @CreatedBy
+    @Column(nullable = true)
+    private Long createdById;
+
+    @Column(nullable = true)
+    private String modifiedBy;
+
     @LastModifiedBy
     @Column(nullable = true)
-    private Long modifiedBy; // 수정자
+    private Long modifiedById; // 수정자
+
 
 }
