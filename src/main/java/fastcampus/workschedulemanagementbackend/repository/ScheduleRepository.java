@@ -16,4 +16,6 @@ public interface ScheduleRepository extends JpaRepository<WorkSchedule, Long> {
 
     @Query(value = "select distinct s from WorkSchedule s left join fetch s.userAccount where (function('date_format', s.start, '%Y, %m') = function('date_format', :date, '%Y, %m') or function('date_format', s.end, '%Y, %m') = function('date_format', :date, '%Y, %m')) and s.userAccount.id = :id")
     List<WorkSchedule> findAllByUserAccountId(@Param("id") Long id, @Param("date") Date date);
+
+
 }
