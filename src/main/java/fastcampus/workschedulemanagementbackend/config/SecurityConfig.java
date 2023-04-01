@@ -75,8 +75,7 @@ public class SecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers(HttpMethod.POST,   "/api/users/signup",
                                                     "/api/refresh",
-                                                    "/api/login",
-                                                    "/api/logout"
+                                                    "/api/login"
                 ).permitAll()
                 .anyRequest().authenticated());
 
