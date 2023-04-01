@@ -2,6 +2,8 @@ package fastcampus.workschedulemanagementbackend.dto;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
+import fastcampus.workschedulemanagementbackend.utils.AESUtil;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -33,13 +35,12 @@ public record UserAccountDto(
         return new UserAccountDto(id, username, null, name, email, role, remainedVacationCount, createdAt, modifiedAt);
     }
 
-    public static UserAccountDto from(UserAccount entity) {
+    public static UserAccountDto fromWithoutPassword(UserAccount entity, AESUtil aesUtil) {
         return UserAccountDto.of(
                 entity.getId(),
                 entity.getUsername(),
-                entity.getPassword(),
-                entity.getName(),
-                entity.getEmail(),
+                aesUtil.decrypt(entity.getName()),
+                aesUtil.decrypt(entity.getEmail()),
                 entity.getRole(),
                 entity.getRemainedVacationCount(),
                 entity.getCreatedAt(),
@@ -47,27 +48,13 @@ public record UserAccountDto(
         );
     }
 
-    public static UserAccountDto fromWithoutPassword(UserAccount entity) {
-        return UserAccountDto.of(
-                entity.getId(),
-                entity.getUsername(),
-                entity.getName(),
-                entity.getEmail(),
-                entity.getRole(),
-                entity.getRemainedVacationCount(),
-                entity.getCreatedAt(),
-                entity.getModifiedAt()
-        );
-    }
-
-    public UserAccount toEntity() {
+    public UserAccount toEntity(PasswordEncoder passwordEncoder, AESUtil aesUtil) {
         return UserAccount.of(
                 username,
-                password,
-                name,
-                email
+                passwordEncoder.encode(password),
+                aesUtil.encrypt(name),
+                aesUtil.encrypt(email)
         );
     }
-
 
 }

@@ -13,9 +13,8 @@ public class UserAccountJoinResponse {
     private String username;
     private UserRoleType role;
 
-    public static UserAccountJoinResponse fromWithoutUser(UserAccountDto user){
+    public static UserAccountJoinResponse from(UserAccountDto user){
         return new UserAccountJoinResponse(
-
                 user.id(), user.username(), user.role()
         );
     }

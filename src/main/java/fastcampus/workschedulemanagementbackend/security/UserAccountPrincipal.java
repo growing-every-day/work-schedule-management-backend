@@ -2,7 +2,6 @@ package fastcampus.workschedulemanagementbackend.security;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
-import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

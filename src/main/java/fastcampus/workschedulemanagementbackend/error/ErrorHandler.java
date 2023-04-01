@@ -1,6 +1,7 @@
 package fastcampus.workschedulemanagementbackend.error;
 
 import fastcampus.workschedulemanagementbackend.dto.response.useraccount.Response;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
-
+        log.error("Error occurs {}", ex.toString());
         return new ResponseEntity<>(
                 ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), ex.getErrorMessage()),
                 HttpStatus.BAD_REQUEST
@@ -29,7 +30,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(FieldValidationException.class)
     public ResponseEntity<ErrorResponse> handleFieldValidationException(FieldValidationException ex) {
-
+        log.error("Error occurs {}", ex.toString());
         return new ResponseEntity<>(
                 ErrorResponse.of(HttpStatus.BAD_REQUEST.value(),ex.getErrorMessage(), ex.getValidationErrorDto().fieldErrors()),
                 HttpStatus.BAD_REQUEST
@@ -38,10 +39,19 @@ public class ErrorHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-
+        log.error("Error occurs {}", ex.toString());
         return new ResponseEntity<>(
                 ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Server Error"),
                 HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<?> jwtExpiredHandler(ExpiredJwtException e){
+        log.error("Error occurs {}", e.getCause());
+        return new ResponseEntity<>(
+                ErrorCode.JWT_EXPIRED.getMessage(),
+                ErrorCode.JWT_EXPIRED.getStatus()
         );
     }
 

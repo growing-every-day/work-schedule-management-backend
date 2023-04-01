@@ -1,5 +1,6 @@
 package fastcampus.workschedulemanagementbackend.config;
 
+import fastcampus.workschedulemanagementbackend.error.FilterExceptionHandler;
 import fastcampus.workschedulemanagementbackend.jwt.JwtAuthorizationFilter;
 import fastcampus.workschedulemanagementbackend.jwt.JwtTokenProvider;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
@@ -31,6 +32,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -48,8 +50,6 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserAccountRepository userAccountRepository;
     private final UserAccountService userAccountService;
-
-    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -71,9 +71,10 @@ public class SecurityConfig {
         // authorize
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .requestMatchers(HttpMethod.GET, "/", "/home").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh", "/api/signup").permitAll()
-                .requestMatchers("/api/admin").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST,   "/api/users/signup",
+                                                    "/api/refresh",
+                                                    "/api/login"
+                ).permitAll()
                 .anyRequest().authenticated());
 
         // 예외처리
@@ -99,7 +100,9 @@ public class SecurityConfig {
                     }
                 });
 
-        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        http.addFilterBefore(jwtAuthorizationFilter(), BasicAuthenticationFilter.class);
+        http.addFilterBefore(new FilterExceptionHandler(), UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
@@ -112,11 +115,6 @@ public class SecurityConfig {
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
