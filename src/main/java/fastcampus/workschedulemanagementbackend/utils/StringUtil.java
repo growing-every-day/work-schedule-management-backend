@@ -1,8 +1,11 @@
 package fastcampus.workschedulemanagementbackend.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Random;
 
 //랜덤 값 만들기
+@Component
 public class StringUtil {
 
     public static String randomStr(int length) {

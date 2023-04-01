@@ -1,5 +1,7 @@
 package fastcampus.workschedulemanagementbackend.utils;
 
+import org.springframework.stereotype.Component;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -10,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.util.Base64;
 
+@Component
 public class AESUtil {
 
     private final String ALGORITHM = "AES/CBC/PKCS5PADDING";

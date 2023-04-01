@@ -11,6 +11,7 @@ import fastcampus.workschedulemanagementbackend.jwt.JwtTokenProvider;
 import fastcampus.workschedulemanagementbackend.error.ErrorCode;
 import fastcampus.workschedulemanagementbackend.error.wsAppException;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
+import fastcampus.workschedulemanagementbackend.utils.AESUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class UserAccountService {
     private final UserAccountRepository userAccountRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final AESUtil aesUtil;
 
     @Transactional
     public UserAccountDto join(UserAccountDto userAccountDto){
@@ -39,7 +41,7 @@ public class UserAccountService {
             throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userAccountDto.username()));
         });
         //회원가입 진행 = user를 등록
-        UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity(passwordEncoder));
+        UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity(passwordEncoder, aesUtil));
         return UserAccountDto.from(userAccount);
     }
 

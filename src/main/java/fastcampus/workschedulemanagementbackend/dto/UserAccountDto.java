@@ -2,6 +2,7 @@ package fastcampus.workschedulemanagementbackend.dto;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
+import fastcampus.workschedulemanagementbackend.utils.AESUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -70,12 +71,12 @@ public record UserAccountDto(
         );
     }
 
-    public UserAccount toEntity(PasswordEncoder passwordEncoder) {
+    public UserAccount toEntity(PasswordEncoder passwordEncoder, AESUtil aesUtil) {
         return UserAccount.of(
                 username,
                 passwordEncoder.encode(password),
-                name,
-                email
+                aesUtil.encrypt(name),
+                aesUtil.encrypt(email)
         );
     }
 
