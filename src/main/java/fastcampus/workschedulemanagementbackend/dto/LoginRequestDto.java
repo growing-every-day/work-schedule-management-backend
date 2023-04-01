@@ -17,6 +17,9 @@ public class LoginRequestDto {
             message = "비밀번호는 8~16자 영문 대소문자, 숫자, 특수문자를 사용하세요.")
     private String password; // 패스워드
 
+    protected LoginRequestDto() {
+    }
+
     private LoginRequestDto(String username) {
         this.username = username;
     }
