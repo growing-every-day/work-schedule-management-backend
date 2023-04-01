@@ -1,9 +1,4 @@
-package fastcampus.workschedulemanagementbackend.common.utils;
-
-<<<<<<< Updated upstream
-import org.springframework.util.Base64Utils;
-=======
->>>>>>> Stashed changes
+package fastcampus.workschedulemanagementbackend.utils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -21,6 +16,8 @@ public class AESUtil {
     private final String KEY = "example";
     private String iv;
 
+    //암호화
+    //생성한 iv 값과 Base64로 인코딩한 값을 합친 문자열을 리턴한다.
     public String encrypt(String data) {
 
         try {
@@ -33,6 +30,10 @@ public class AESUtil {
         }
     }
 
+    //복호화
+//    데이터의 첫 16자리는 iv값, 이후의 데이터는 암호문이다.
+//    암호문은 Base64로 인코딩 되어 있으므로 디코딩 한다.
+//    복호화된 평문을 리턴한다.
     public String decrypt(String data) {
         String ivStr = data.substring(0,16);
         String content = data.substring(16);
@@ -47,7 +48,7 @@ public class AESUtil {
             throw new RuntimeException("decrypt fail : " + e.getMessage());
         }
     }
-
+    //매 요청마다 숫자와 영문을 조합한 랜덤 16바이트 값을 생성하여 멤버 변수에 저장
     private IvParameterSpec createIvSpec() {
         try {
             String iv = StringUtil.randomStr(16);
@@ -58,7 +59,7 @@ public class AESUtil {
         }
 
     }
-
+    //키 값은 임의의 문자열의 SHA-256 해시값을 사용했다.
     private Key createKeySpec() {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

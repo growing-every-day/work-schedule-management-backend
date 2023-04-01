@@ -1,7 +1,8 @@
-package fastcampus.workschedulemanagementbackend.common.utils;
+package fastcampus.workschedulemanagementbackend.utils;
 
 import java.util.Random;
 
+//랜덤 값 만들기
 public class StringUtil {
 
     public static String randomStr(int length) {

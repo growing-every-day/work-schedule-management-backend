@@ -1,6 +1,6 @@
 package fastcampus.workschedulemanagementbackend.common;
 
-import fastcampus.workschedulemanagementbackend.common.utils.AESUtil;
+import fastcampus.workschedulemanagementbackend.utils.AESUtil;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +13,8 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+//HttpServletRequest를 생성자로 주입받아서 바디 데이터를 꺼내 복호화 한 후 멤버변수에 저장한다.
+//getInputStream()를 오버라이딩하여 복호화된 decodingBody를 가지고 input stream을 생성하여 리턴 하도록 한다.
 @Slf4j
 public class RequestDecryptWrapper extends HttpServletRequestWrapper {
     private final Charset encoding;
