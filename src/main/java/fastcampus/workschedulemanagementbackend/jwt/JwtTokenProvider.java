@@ -6,6 +6,7 @@ import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +19,7 @@ import java.util.Date;
 
 // 토큰을 생성하고 검증하는 클래스입니다.
 // 해당 컴포넌트는 필터클래스에서 사전 검증을 거칩니다.
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
@@ -101,7 +103,11 @@ public class JwtTokenProvider {
      * @return
      */
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+        String bearerToken =  request.getHeader("Authorization");
+        if(bearerToken != null && bearerToken.startsWith("Bearer ")){
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     /**
@@ -144,6 +150,22 @@ public class JwtTokenProvider {
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public boolean isValidateToken(String token) {
+        try{
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+            return true;
+        } catch (SignatureException e) {
+            log.info("토큰의 서명이 잘못됐습니다.");
+        } catch (UnsupportedJwtException | MalformedJwtException e) {
+            log.info("jwt 형식이 잘못됐습니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("토큰 값이 없습니다.");
+        } catch (ExpiredJwtException e){
+            log.info("토큰이 만료됐습니다.");
+        }
+        return false;
     }
 
     /**

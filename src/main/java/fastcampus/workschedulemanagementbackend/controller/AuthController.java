@@ -56,4 +56,9 @@ public class AuthController {
     public ResponseEntity<TokenDto> refresh(@RequestBody TokenDto token) throws Exception {
         return new ResponseEntity<>(userAccountService.refreshToken(token), HttpStatus.OK);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity logout(@RequestBody TokenDto token) {
+        return new ResponseEntity(userAccountService.logout(token), HttpStatus.OK);
+    }
 }

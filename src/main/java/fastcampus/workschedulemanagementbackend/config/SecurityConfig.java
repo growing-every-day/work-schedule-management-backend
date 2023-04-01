@@ -1,5 +1,6 @@
 package fastcampus.workschedulemanagementbackend.config;
 
+import fastcampus.workschedulemanagementbackend.error.FilterExceptionHandler;
 import fastcampus.workschedulemanagementbackend.jwt.JwtAuthorizationFilter;
 import fastcampus.workschedulemanagementbackend.jwt.JwtTokenProvider;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
@@ -27,6 +28,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
 
@@ -44,7 +46,7 @@ public class SecurityConfig {
     private final UserAccountRepository userAccountRepository;
     private final UserAccountService userAccountService;
 
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -65,7 +67,7 @@ public class SecurityConfig {
         // authorize
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.GET, "/", "/home").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh", "/api/signup").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/login", "/api/logout", "/api/refresh", "/api/signup").permitAll()
                 .requestMatchers("/api/admin").hasRole("ADMIN")
                 .anyRequest().authenticated());
 
@@ -92,7 +94,9 @@ public class SecurityConfig {
                     }
                 });
 
-        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        http.addFilterBefore(jwtAuthorizationFilter(), BasicAuthenticationFilter.class);
+        http.addFilterBefore(new FilterExceptionHandler(), UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
@@ -108,7 +112,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    public PasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
