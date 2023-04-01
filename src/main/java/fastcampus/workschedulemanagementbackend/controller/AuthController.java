@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -26,24 +28,28 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto user, HttpServletResponse response) throws Exception {
-        System.out.println("AuthController.login");
         return new ResponseEntity<>(userAccountService.login(user), HttpStatus.OK);
     }
 
     /**
      * access토큰 내부의 유저 정보를 확인한 후 access, refresh 토큰 모두 새로 만들어준다.
      *
-     * @param token
+     * @param accessToken 엑세스 토큰
      * @return
      * @throws Exception
      */
     @PostMapping("/refresh")
-    public ResponseEntity<TokenDto> refresh(@RequestBody TokenDto token) throws Exception {
-        return new ResponseEntity<>(userAccountService.refreshToken(token), HttpStatus.OK);
+    public ResponseEntity<TokenDto> refresh(@RequestBody Map<String, String> accessToken) throws Exception {
+        return new ResponseEntity<>(userAccountService.refreshToken(accessToken.get("accessToken")), HttpStatus.OK);
     }
 
+    /**
+     * accessToken에 담긴 유저정보를 꺼내서 refresh token을 지워준다.
+     * @param accessToken 엑세스 토큰
+     * @return
+     */
     @PostMapping("/logout")
-    public ResponseEntity logout(@RequestBody TokenDto token) {
-        return new ResponseEntity(userAccountService.logout(token), HttpStatus.OK);
+    public ResponseEntity logout(@RequestBody Map<String, String> accessToken) {
+        return new ResponseEntity(userAccountService.logout(accessToken.get("accessToken")), HttpStatus.OK);
     }
 }
