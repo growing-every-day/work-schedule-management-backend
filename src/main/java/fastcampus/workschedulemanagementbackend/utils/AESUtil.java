@@ -16,7 +16,7 @@ import java.util.Base64;
 public class AESUtil {
 
     private final String ALGORITHM = "AES/CBC/PKCS5PADDING";
-    private final String KEY = "example";
+    private final String KEY = "01234567890123456789012345678901";
     private String iv;
 
     //암호화
@@ -51,17 +51,17 @@ public class AESUtil {
             throw new RuntimeException("decrypt fail : " + e.getMessage());
         }
     }
-    //매 요청마다 숫자와 영문을 조합한 랜덤 16바이트 값을 생성하여 멤버 변수에 저장
+
     private IvParameterSpec createIvSpec() {
         try {
-            String iv = StringUtil.randomStr(16);
-            this.iv = iv;
+            this.iv = KEY.substring(0, 16);;
             return new IvParameterSpec(iv.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             throw new RuntimeException("createIvSpec fail : " +  e.getMessage());
         }
 
     }
+
     //키 값은 임의의 문자열의 SHA-256 해시값을 사용했다.
     private Key createKeySpec() {
         try {
