@@ -75,15 +75,15 @@ public class UserAuthService {
 
     /**
      * access, refresh 토큰 재발급
-     * @param token
+     * @param accessToken 엑세스 토큰
      * @return
      * @throws Exception
      */
-    public TokenDto refreshToken(TokenDto token) throws Exception {
+    public TokenDto refreshToken(String accessToken) throws Exception {
         String userName = null;
 
         try{
-            userName = jwtTokenProvider.getUsernameByToken(token.getAccessToken());
+            userName = jwtTokenProvider.getUsernameByToken(accessToken);
         } catch (ExpiredJwtException ex){
             // access 토큰이 만료됐으면
             userName = ex.getClaims().getSubject();
@@ -109,15 +109,14 @@ public class UserAuthService {
     }
 
     /**
-     * 클라이언트 Local Storage에 저장된 access, refresh token폐기한다.
-     * useraccount테이블의 refresh token 컬럼값을 없애준다.
-     * @param tokenDto 회원정보를 꺼내올 access token
+     * 프론트 단에서는 Local Storage에 저장된 access, refresh token 폐기한다.
+     * user_account 테이블의 refresh token 컬럼값을 없애준다.
+     * @param accessToken 회원정보를 꺼내올 access token
      */
-    public boolean logout(TokenDto tokenDto) {
-        UserAccount userAccount = null;
+    public boolean logout(String accessToken) {
         String userName = null;
         try {
-            Claims claims = jwtTokenProvider.verifyToken(tokenDto.getRefreshToken());
+            Claims claims = jwtTokenProvider.verifyToken(accessToken);
             userName = claims.getSubject();
         } catch (ExpiredJwtException e) {
             userName = e.getClaims().getSubject();
@@ -125,12 +124,13 @@ public class UserAuthService {
             throw e;
         }
 
-        userAccount = userAccountRepository.findByUsername(userName).orElseThrow(() ->
+        UserAccount userAccount = userAccountRepository.findByUsername(userName).orElseThrow(() ->
                 new BadCredentialsException("access token의 잘못된 계정정보입니다."));
 
         userAccount.setRefreshToken("");
         // refresh token을 빈 문자열로 업데이트 한다. (지워준다)
         userAccountRepository.updateRefreshToken("", userAccount.getId());
+
         return true;
     }
 }
