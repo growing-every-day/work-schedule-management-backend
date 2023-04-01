@@ -1,6 +1,9 @@
 package fastcampus.workschedulemanagementbackend.common.utils;
 
+<<<<<<< Updated upstream
 import org.springframework.util.Base64Utils;
+=======
+>>>>>>> Stashed changes
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
