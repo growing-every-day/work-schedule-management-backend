@@ -1,5 +1,6 @@
 package fastcampus.workschedulemanagementbackend.service;
 
+import fastcampus.workschedulemanagementbackend.aop.LoginLog;
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.dto.LoginRequestDto;
 import fastcampus.workschedulemanagementbackend.dto.LoginResponseDto;
@@ -15,9 +16,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,14 +35,11 @@ public class UserAccountService {
     @Transactional
     public UserAccountDto join(UserAccountDto userAccountDto){
         //회원가입하려는 username으로 회원가입된 user가 있는지
-        log.error("User {} is trying to join in AccountService", userAccountDto.username());
         userAccountRepository.findByUsername(userAccountDto.username()).ifPresent(it ->{
             throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userAccountDto.username()));
         });
-        log.error("User {} is not found in AccountService", userAccountDto.username());
         //회원가입 진행 = user를 등록
-        UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity());
-        log.error("User {} is saved in AccountService", userAccount.toString());
+        UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity(passwordEncoder));
         return UserAccountDto.from(userAccount);
     }
 
@@ -86,7 +81,6 @@ public class UserAccountService {
             throw new BadRequestException("회원 정보는 null 일 수 없습니다");
         }
 
-        log.info("userAccountDto: {}", userAccountDto);
         return Optional.ofNullable(userAccountRepository.findById(id)
                 .map(existingUserAccount -> {
                     existingUserAccount.update(userAccountDto);
@@ -117,10 +111,10 @@ public class UserAccountService {
      * @return
      * @throws Exception
      */
+    @LoginLog
     public LoginResponseDto login(LoginRequestDto request) throws Exception {
         UserAccount userAccount = userAccountRepository.findByUsername(request.getUsername()).orElseThrow(() ->
                 new BadCredentialsException("잘못된 계정정보입니다."));
-
         if (!passwordEncoder.matches(request.getPassword(), userAccount.getPassword())) {
             throw new BadCredentialsException("잘못된 계정정보입니다.");
         }
