@@ -29,7 +29,7 @@ public class UserAccountService {
     public UserAccountDto join(UserAccountDto userAccountDto){
         //회원가입하려는 username으로 회원가입된 user가 있는지
         userAccountRepository.findByUsername(userAccountDto.username()).ifPresent(it ->{
-            throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userAccountDto.username()));
+            throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s 는 중복된 아이디입니다.", userAccountDto.username()));
         });
         //회원가입 진행 = user를 등록
         UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity(passwordEncoder, aesUtil));
