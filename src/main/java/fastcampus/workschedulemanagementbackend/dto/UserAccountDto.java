@@ -35,39 +35,16 @@ public record UserAccountDto(
         return new UserAccountDto(id, username, null, name, email, role, remainedVacationCount, createdAt, modifiedAt);
     }
 
-    public static UserAccountDto from(UserAccount entity) {
+    public static UserAccountDto fromWithoutPassword(UserAccount entity, AESUtil aesUtil) {
         return UserAccountDto.of(
                 entity.getId(),
                 entity.getUsername(),
-                entity.getPassword(),
-                entity.getName(),
-                entity.getEmail(),
+                aesUtil.decrypt(entity.getName()),
+                aesUtil.decrypt(entity.getEmail()),
                 entity.getRole(),
                 entity.getRemainedVacationCount(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt()
-        );
-    }
-
-    public static UserAccountDto fromWithoutPassword(UserAccount entity) {
-        return UserAccountDto.of(
-                entity.getId(),
-                entity.getUsername(),
-                entity.getName(),
-                entity.getEmail(),
-                entity.getRole(),
-                entity.getRemainedVacationCount(),
-                entity.getCreatedAt(),
-                entity.getModifiedAt()
-        );
-    }
-
-    public UserAccount toEntity() {
-        return UserAccount.of(
-                username,
-                password,
-                name,
-                email
         );
     }
 
@@ -79,6 +56,5 @@ public record UserAccountDto(
                 aesUtil.encrypt(email)
         );
     }
-
 
 }
