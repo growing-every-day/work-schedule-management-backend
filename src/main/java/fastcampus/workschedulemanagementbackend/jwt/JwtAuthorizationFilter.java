@@ -10,11 +10,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+
 import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 
@@ -43,44 +47,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String accessToken = jwtTokenProvider.resolveToken(request);
         if(null != accessToken) {
             try {
-                Claims claims = jwtTokenProvider.validateBearerAccessToken(accessToken);
-
-                accessToken = accessToken.split(" ")[1].trim();
-                Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
+                Claims claims = jwtTokenProvider.verifyToken(accessToken);
+                UserAccount userAccount = userAccountRepository.findByUsername(claims.getSubject()).orElseThrow(() ->
+                        new BadCredentialsException("access token의 잘못된 계정정보입니다."));
+                // access 토큰 생성
+                String newAccessToken = jwtTokenProvider.createAccessToken(userAccount.getUsername(), userAccount.getRole());
+                Authentication auth = jwtTokenProvider.getAuthentication(newAccessToken);
                 SecurityContextHolder.getContext().setAuthentication(auth);
-
-            } catch (ExpiredJwtException exp) {
-                // access token이 만료됨 -> refresh token 확인
-                 UserAccount userAccount = userAccountRepository.findByUsername(exp.getClaims().getSubject()).orElseThrow(() ->
-                        new BadCredentialsException("잘못된 계정정보입니다."));
-
-                try {
-                    Claims refreshClaims = jwtTokenProvider.verifyToken(userAccount.getRefreshToken());
-
-                    // 리프레시 토큰 만료시간이 3일 이내로 남았으면 새로 생성해준다.
-                    if (jwtTokenProvider.isTokenRenewRequired(refreshClaims.getExpiration(), 3, ChronoUnit.DAYS)) {
-                        userAccountService.createRefreshToken(userAccount);
-                    }
-
-                    // access 토큰 생성
-                    String newAccessToken = jwtTokenProvider.createAccessToken(userAccount.getUsername(), userAccount.getRole());
-                    Authentication auth = jwtTokenProvider.getAuthentication(newAccessToken);
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-
-                }
-                catch (ExpiredJwtException exp2){
-                    response.setStatus(200);
-                    response.setCharacterEncoding("utf-8");
-                    response.setContentType("text/html; charset=UTF-8");
-                    response.getWriter().write("리프레시 토큰이 만료되었습니다. 재로그인 하세요.");
-                }
-                catch (Exception ex) {
-
-                }
+            } catch (ExpiredJwtException e) {
+                throw e;
+            } catch (Exception e){
+                throw e;
             }
         }
         filterChain.doFilter(request, response);
     }
-
 
 }

@@ -16,18 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final UserAccountService userAccountService;
 
-    @PostMapping("/test")
-    public String test() {
-
-        return "<h1>test 통과</h1>";
-    }
-
-    @PostMapping("/admin")
-    public String admin() {
-
-        return "<h1>admin 통과</h1>";
-    }
-
     /**
      * 로그인 시 access 토큰, refresh 토큰 모두 새로 만들어준다.
      *
@@ -52,5 +40,10 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<TokenDto> refresh(@RequestBody TokenDto token) throws Exception {
         return new ResponseEntity<>(userAccountService.refreshToken(token), HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity logout(@RequestBody TokenDto token) {
+        return new ResponseEntity(userAccountService.logout(token), HttpStatus.OK);
     }
 }

@@ -11,11 +11,11 @@ import fastcampus.workschedulemanagementbackend.jwt.JwtTokenProvider;
 import fastcampus.workschedulemanagementbackend.error.ErrorCode;
 import fastcampus.workschedulemanagementbackend.error.wsAppException;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -172,11 +172,46 @@ public class UserAccountService {
 
         UserAccount userAccount = userAccountRepository.findByUsername(userName).orElseThrow(() ->
                 new BadCredentialsException("잘못된 계정정보입니다."));
+        String currentRefreshToken = userAccount.getRefreshToken();
+        try {
+            Claims claims = jwtTokenProvider.verifyToken(currentRefreshToken);
+        } catch (ExpiredJwtException | IllegalArgumentException e) {
+            // refresh token이 만료됐거나 null이면 재로그인을 해야함
+            throw new ExpiredJwtException(null, null, null);
+        } catch (Exception e){
+            throw e;
+        }
         
         String newRefreshToken = createRefreshToken(userAccount);
         return TokenDto.builder()
                 .accessToken(jwtTokenProvider.createAccessToken(userName, userAccount.getRole()))
                 .refreshToken(newRefreshToken)
                 .build();
+    }
+
+    /**
+     * 클라이언트 Local Storage에 저장된 access, refresh token폐기한다.
+     * useraccount테이블의 refresh token 컬럼값을 없애준다.
+     * @param tokenDto 회원정보를 꺼내올 access token
+     */
+    public boolean logout(TokenDto tokenDto) {
+        UserAccount userAccount = null;
+        String userName = null;
+        try {
+            Claims claims = jwtTokenProvider.verifyToken(tokenDto.getRefreshToken());
+            userName = claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            userName = e.getClaims().getSubject();
+        } catch (Exception e){
+            throw e;
+        }
+
+        userAccount = userAccountRepository.findByUsername(userName).orElseThrow(() ->
+                new BadCredentialsException("access token의 잘못된 계정정보입니다."));
+
+        userAccount.setRefreshToken("");
+        // refresh token을 빈 문자열로 업데이트 한다. (지워준다)
+        userAccountRepository.updateRefreshToken("", userAccount.getId());
+        return true;
     }
 }
