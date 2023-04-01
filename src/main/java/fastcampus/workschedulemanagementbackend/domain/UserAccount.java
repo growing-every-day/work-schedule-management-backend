@@ -77,11 +77,6 @@ public class UserAccount extends BaseTimeEntity {
         this.remainedVacationCount = DEFAULT_VACATION_DAYS;
     }
 
-    private UserAccount(String name, String email){
-        this.name = name;
-        this.email = email;
-    }
-
     public static UserAccount of(String username, String password, String name, String email) {
         return new UserAccount(username, password, name, email);
     }
