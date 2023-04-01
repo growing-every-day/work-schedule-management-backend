@@ -1,5 +1,6 @@
 package fastcampus.workschedulemanagementbackend.config;
 
+import fastcampus.workschedulemanagementbackend.error.BadRequestException;
 import fastcampus.workschedulemanagementbackend.error.FilterExceptionHandler;
 import fastcampus.workschedulemanagementbackend.jwt.JwtAuthorizationFilter;
 import fastcampus.workschedulemanagementbackend.jwt.JwtTokenProvider;
@@ -51,8 +52,6 @@ public class SecurityConfig {
     private final UserAccountRepository userAccountRepository;
     private final UserAccountService userAccountService;
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
@@ -86,20 +85,14 @@ public class SecurityConfig {
                     @Override
                     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
                         // 인증문제가 발생했을 때 이 부분을 호출한다.
-                        response.setStatus(401);
-                        response.setCharacterEncoding("utf-8");
-                        response.setContentType("text/html; charset=UTF-8");
-                        response.getWriter().write("인증되지 않은 사용자입니다.");
+                        throw authException;
                     }
                 })
                 .accessDeniedHandler(new AccessDeniedHandler() {
                     @Override
                     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-                        // 권한 문제가 발생했을 때 이 부분을 호출한다.
-                        response.setStatus(403);
-                        response.setCharacterEncoding("utf-8");
-                        response.setContentType("text/html; charset=UTF-8");
-                        response.getWriter().write("권한이 없는 사용자입니다.");
+                        // 권한이 없는 페이지 요청을 하면 이 부분을 호출한다.
+                        throw accessDeniedException;
                     }
                 });
 
@@ -118,11 +111,6 @@ public class SecurityConfig {
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean

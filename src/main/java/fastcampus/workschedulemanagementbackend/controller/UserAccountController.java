@@ -10,6 +10,7 @@ import fastcampus.workschedulemanagementbackend.error.BadRequestException;
 import fastcampus.workschedulemanagementbackend.error.FieldValidationException;
 import fastcampus.workschedulemanagementbackend.security.UserAccountPrincipal;
 import fastcampus.workschedulemanagementbackend.service.UserAccountService;
+import fastcampus.workschedulemanagementbackend.utils.AESUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,28 +30,33 @@ import java.util.stream.Collectors;
 public class UserAccountController {
 
     private final UserAccountService userAccountService;
+    private final AESUtil aesUtil;
 
     @PostMapping("/signup")
-    public Response<UserAccountJoinResponse> join(@RequestBody UserAccountJoinRequest request) {
-        //join
+    public Response<UserAccountJoinResponse> join(@Valid @RequestBody UserAccountJoinRequest request, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new FieldValidationException("입력한 값이 올바르지 않습니다.", handleBindingResult(bindingResult));
+        }
+
         UserAccountDto user = userAccountService.join(request.toDto());
-        return Response.success(UserAccountJoinResponse.fromWithoutUser(user));
+        return Response.success(UserAccountJoinResponse.from(user));
     }
 
     @GetMapping
     public ResponseEntity<UserAccountGetAllUserResponse> getAllUserAccounts(@RequestParam(required = false) String name) {
-        List<UserAccountDto> userAccountDtoList = userAccountService.getAllUserAccounts(name);
+
+        List<UserAccountDto> userAccountDtoList = userAccountService.getAllUserAccounts(name != null ? aesUtil.encrypt(name) : null);
         return new ResponseEntity<>(new UserAccountGetAllUserResponse(userAccountDtoList), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserAccountGetResponse> getUserAccount(@PathVariable Long id) {
         return userAccountService.getUserAccountById(id)
-                .map(userAccountDto -> new ResponseEntity<>(new UserAccountGetResponse(userAccountDto), HttpStatus.OK))
+                .map(userAccountDto -> new ResponseEntity<>(UserAccountGetResponse.of(userAccountDto), HttpStatus.OK))
                 .orElseThrow(() -> new BadRequestException("회원 조회에 실패했습니다."));
     }
 
-    // TODO: 추후에 암호 인코딩 필요
     @PostMapping("/{id}/update")
     public ResponseEntity<UserAccountUpdateResponse> updateUserAccount(@PathVariable Long id,
                                                                        @AuthenticationPrincipal UserAccountPrincipal userAccountPrincipal,

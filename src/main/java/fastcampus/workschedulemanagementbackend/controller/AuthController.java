@@ -1,34 +1,43 @@
 package fastcampus.workschedulemanagementbackend.controller;
 
-import fastcampus.workschedulemanagementbackend.dto.LoginRequestDto;
-import fastcampus.workschedulemanagementbackend.dto.LoginResponseDto;
-import fastcampus.workschedulemanagementbackend.dto.TokenDto;
-import fastcampus.workschedulemanagementbackend.service.UserAccountService;
-import jakarta.servlet.http.HttpServletResponse;
+import fastcampus.workschedulemanagementbackend.dto.*;
+import fastcampus.workschedulemanagementbackend.error.FieldValidationException;
+import fastcampus.workschedulemanagementbackend.service.UserAuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
+import java.util.stream.Collectors;
+@Slf4j
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class AuthController {
-    private final UserAccountService userAccountService;
+    private final UserAuthService userAuthService;
 
     /**
      * 로그인 시 access 토큰, refresh 토큰 모두 새로 만들어준다.
      *
      * @param user
-     * @param response
      * @return
      * @throws Exception
      */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto user, HttpServletResponse response) throws Exception {
-        return new ResponseEntity<>(userAccountService.login(user), HttpStatus.OK);
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto user, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            throw new FieldValidationException("입력한 값이 올바르지 않습니다.", handleBindingResult(bindingResult));
+        }
+
+        LoginResponseDto login = userAuthService.login(user);
+        return new ResponseEntity<>(login, HttpStatus.OK);
     }
 
     /**
@@ -40,7 +49,7 @@ public class AuthController {
      */
     @PostMapping("/refresh")
     public ResponseEntity<TokenDto> refresh(@RequestBody Map<String, String> accessToken) throws Exception {
-        return new ResponseEntity<>(userAccountService.refreshToken(accessToken.get("accessToken")), HttpStatus.OK);
+        return new ResponseEntity<>(userAuthService.refreshToken(accessToken.get("accessToken")), HttpStatus.OK);
     }
 
     /**
@@ -50,6 +59,16 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public ResponseEntity logout(@RequestBody Map<String, String> accessToken) {
-        return new ResponseEntity(userAccountService.logout(accessToken.get("accessToken")), HttpStatus.OK);
+        return new ResponseEntity(userAuthService.logout(accessToken.get("accessToken")), HttpStatus.OK);
+    }
+
+    private ValidationErrorDto handleBindingResult(BindingResult bindingResult) {
+
+        return ValidationErrorDto
+                .of(
+                        bindingResult.
+                                getFieldErrors().stream()
+                                .map(error -> FieldErrorDto.of(error.getField(), error.getDefaultMessage()))
+                                .collect(Collectors.toList()));
     }
 }
