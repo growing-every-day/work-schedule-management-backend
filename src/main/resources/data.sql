@@ -43,3 +43,23 @@ insert into work_schedule (id, user_account_id, category, start_date, end_date, 
 values (6, 2, 'LEAVE', date_format('2023/04/10', '%Y/%m/%d'), date_format('2023/04/11', '%Y/%m/%d'), 2, now());
 insert into work_schedule (id, user_account_id, category, start_date, end_date, created_by, created_at)
 values (7, 2, 'LEAVE', date_format('2023/04/29', '%Y/%m/%d'), date_format('2023/05/01', '%Y/%m/%d'), 2, now());
+
+
+--work_schedule
+insert into work_schedule (id, user_account_id, category, start_date, end_date, created_by, created_at)
+values (1, 1, 'DUTY', now(), now(), 1, now());
+
+insert into work_schedule (id, user_account_id, category, start_date, end_date, created_by, created_at)
+values (2, 2, 'LEAVE', date_format('2023/02/08', '%Y/%m/%d'), date_format('2023/02/10', '%Y/%m/%d'), 2, now());
+insert into work_schedule (id, user_account_id, category, start_date, end_date, created_by, created_at)
+values (3, 2, 'LEAVE', date_format('2023/02/15', '%Y/%m/%d'), date_format('2023/03/15', '%Y/%m/%d'), 2, now());
+
+insert into work_schedule (id, user_account_id, category, start_date, end_date, created_by, created_at)
+values (4, 2, 'LEAVE', date_format('2023/03/10', '%Y/%m/%d'), date_format('2023/03/15', '%Y/%m/%d'), 2, now());
+
+insert into work_schedule (id, user_account_id, category, start_date, end_date, created_by, created_at)
+values (5, 2, 'LEAVE', date_format('2023/03/30', '%Y/%m/%d'), date_format('2023/04/02', '%Y/%m/%d'), 2, now());
+insert into work_schedule (id, user_account_id, category, start_date, end_date, created_by, created_at)
+values (6, 2, 'LEAVE', date_format('2023/04/10', '%Y/%m/%d'), date_format('2023/04/11', '%Y/%m/%d'), 2, now());
+insert into work_schedule (id, user_account_id, category, start_date, end_date, created_by, created_at)
+values (7, 2, 'LEAVE', date_format('2023/04/29', '%Y/%m/%d'), date_format('2023/05/01', '%Y/%m/%d'), 2, now());
