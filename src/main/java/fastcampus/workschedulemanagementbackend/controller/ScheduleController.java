@@ -56,7 +56,7 @@ public class ScheduleController {
                                                               ) {
         if (bindingResult.hasErrors()) {
             FieldError fieldError = bindingResult.getFieldError();
-            throw new BadRequestException(fieldError.getDefaultMessage());
+            throw new FieldValidationException(fieldError.getDefaultMessage().toString(), handleBindingResult(bindingResult));
         }
         return new ResponseEntity<>(scheduleService.createWorkSchedule(workScheduleRequest, userAccountPrincipal, userid), HttpStatus.OK);
     }
@@ -69,7 +69,7 @@ public class ScheduleController {
                                                               ) {
         if (bindingResult.hasErrors()) {
             FieldError fieldError = bindingResult.getFieldError();
-            throw new BadRequestException(fieldError.getDefaultMessage());
+            throw new FieldValidationException(fieldError.getDefaultMessage().toString(), handleBindingResult(bindingResult));
         }
 
         if (workScheduleRequest.eventId() == null) {
