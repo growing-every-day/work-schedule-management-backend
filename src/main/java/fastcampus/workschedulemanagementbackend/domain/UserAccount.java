@@ -62,7 +62,6 @@ public class UserAccount extends BaseTimeEntity {
     @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
     private final Set<WorkSchedule> workSchedules = new LinkedHashSet<>();
 
-
     @ToString.Exclude
     @OrderBy("loginTime DESC")
     @OneToMany(mappedBy = "userAccount")

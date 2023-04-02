@@ -80,7 +80,6 @@ public class UserAccountService {
 
     @Transactional
     public Optional<Boolean> deleteUserAccount(Long id) {
-
         if (id == null) {
             throw new BadRequestException("회원 번호는 null 일 수 없습니다");
         }

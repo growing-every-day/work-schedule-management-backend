@@ -66,7 +66,7 @@ public class UserAccountController {
         checkAdmin(id, userAccountPrincipal, "다른 회원을 수정할 권한이 없습니다.");
 
         if (bindingResult.hasErrors()) {
-            throw new FieldValidationException("회원 정보 수정에 실패했습니다.", handleBindingResult(bindingResult));
+            throw new FieldValidationException("입력한 값이 올바르지 않습니다.", handleBindingResult(bindingResult));
         }
 
         return userAccountService.updateUserAccount(id, userAccountUpdateRequest.toDto())
