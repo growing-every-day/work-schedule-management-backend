@@ -165,7 +165,7 @@ public class WorkScheduleService {
     }
 
     private void checkDuplicateDates(Long userId, LocalDate start, LocalDate end) {
-        List<WorkSchedule> schedules = scheduleRepository.findAllByUserAccountId(userId);
+        List<WorkSchedule> schedules = scheduleRepository.findAllByUserAccountIdAndStartAfter(userId, start);
         for (WorkSchedule schedule : schedules) {
             if (schedule.getStart().isBefore(end) && start.isBefore(schedule.getEnd())) {
                 throw new BadRequestException(ErrorCode.DUPLICATED_SCHEDULE);
