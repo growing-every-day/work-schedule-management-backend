@@ -1,23 +1,39 @@
 package fastcampus.workschedulemanagementbackend.dto.request.workschedule;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import fastcampus.workschedulemanagementbackend.domain.constants.ScheduleType;
+import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
 import fastcampus.workschedulemanagementbackend.dto.WorkScheduleDto;
+import jakarta.validation.constraints.Pattern;
+
 import java.time.LocalDate;
 public record WorkScheduleRequest(
         @JsonProperty("event_id")
         String eventId,
-        ScheduleType category,
+        @Pattern(regexp = "(?i)^(LEAVE|DUTY)$", message = "스케줄 카테고리는 LEAVE 또는 DUTY 중 하나여야 합니다.")
+        String category,
         LocalDate start,
         LocalDate end
 ) {
-    public WorkScheduleDto toDto(String createdByName){
-        if (eventId == null){
-            return WorkScheduleDto.of(null, category(), start, end, createdByName);
-        }else
-            return WorkScheduleDto.of(Long.valueOf(eventId), category(), start, end, createdByName);
+    public WorkScheduleRequest(
+            @JsonProperty("event_id")
+            String eventId,
+            @Pattern(regexp = "(?i)^(LEAVE|DUTY)$", message = "스케줄 카테고리는 LEAVE 또는 DUTY 중 하나여야 합니다.")
+            String category,
+            LocalDate start,
+            LocalDate end
+    ) {
+        this.eventId = eventId;
+        this.category = category != null ? category.toUpperCase() : null;
+        this.start = start;
+        this.end = end;
     }
 
+    public WorkScheduleDto toDto(String createdByName){
+        if (eventId == null){
+            return WorkScheduleDto.of(null, ScheduleType.valueOf(category), start, end, createdByName);
+        } else {
+            return WorkScheduleDto.of(Long.valueOf(eventId), ScheduleType.valueOf(category), start, end, createdByName);
+        }
+    }
 }

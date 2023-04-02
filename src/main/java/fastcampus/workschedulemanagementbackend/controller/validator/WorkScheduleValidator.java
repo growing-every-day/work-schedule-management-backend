@@ -1,16 +1,11 @@
 package fastcampus.workschedulemanagementbackend.controller.validator;
 
-import fastcampus.workschedulemanagementbackend.domain.constants.ScheduleType;
 import fastcampus.workschedulemanagementbackend.dto.request.workschedule.WorkScheduleRequest;
-import jakarta.validation.ConstraintViolation;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import jakarta.validation.executable.ExecutableValidator;
-import jakarta.validation.metadata.BeanDescriptor;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-import java.util.Set;
 
 public class WorkScheduleValidator implements Validator {
 
@@ -21,12 +16,7 @@ public class WorkScheduleValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        WorkScheduleRequest request = WorkScheduleRequest.class.cast(target);
-
-        if(Objects.isNull(ScheduleType.valueOfLabel(request.category().getLabel()))){
-            errors.rejectValue("category", "NotExist", "category must be LEAVE or DUTY");
-            return;
-        }
+        WorkScheduleRequest request = (WorkScheduleRequest) target;
 
         if (Objects.isNull(request.start())) {
             errors.rejectValue("start", "NotNull", "start_date is null");

@@ -1,8 +1,5 @@
 package fastcampus.workschedulemanagementbackend.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import fastcampus.workschedulemanagementbackend.controller.validator.WorkScheduleValidator;
 import fastcampus.workschedulemanagementbackend.dto.FieldErrorDto;
 import fastcampus.workschedulemanagementbackend.dto.ValidationErrorDto;
@@ -12,14 +9,12 @@ import fastcampus.workschedulemanagementbackend.error.BadRequestException;
 import fastcampus.workschedulemanagementbackend.error.FieldValidationException;
 import fastcampus.workschedulemanagementbackend.security.UserAccountPrincipal;
 import fastcampus.workschedulemanagementbackend.service.WorkScheduleService;
-import fastcampus.workschedulemanagementbackend.utils.AESUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +27,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/schedules")
 public class ScheduleController {
     private final WorkScheduleService scheduleService;
-    private final AESUtil aesUtil;
 
     @InitBinder("workScheduleRequest")
     void initBinder(WebDataBinder binder) {
@@ -55,8 +49,7 @@ public class ScheduleController {
                                                               @PathVariable Long userid
                                                               ) {
         if (bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-            throw new FieldValidationException(fieldError.getDefaultMessage().toString(), handleBindingResult(bindingResult));
+            throw new FieldValidationException("입력한 값이 올바르지 않습니다.", handleBindingResult(bindingResult));
         }
         return new ResponseEntity<>(scheduleService.createWorkSchedule(workScheduleRequest, userAccountPrincipal, userid), HttpStatus.OK);
     }
@@ -68,8 +61,7 @@ public class ScheduleController {
                                                               @PathVariable Long userid
                                                               ) {
         if (bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-            throw new FieldValidationException(fieldError.getDefaultMessage().toString(), handleBindingResult(bindingResult));
+            throw new FieldValidationException("입력한 값이 올바르지 않습니다.", handleBindingResult(bindingResult));
         }
 
         if (workScheduleRequest.eventId() == null) {

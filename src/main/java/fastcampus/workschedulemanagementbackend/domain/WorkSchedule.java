@@ -1,6 +1,5 @@
 package fastcampus.workschedulemanagementbackend.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import fastcampus.workschedulemanagementbackend.domain.constants.ScheduleType;
 import fastcampus.workschedulemanagementbackend.dto.request.workschedule.WorkScheduleRequest;
@@ -10,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.Objects;
 
 @Getter
@@ -89,7 +87,7 @@ public class WorkSchedule extends BaseWriterEntity {
 
     public WorkSchedule update(WorkScheduleRequest workScheduleRequest, String modifiedByName) {
         if (workScheduleRequest.category() != null) {
-            this.category = workScheduleRequest.category();
+            this.category = ScheduleType.valueOf(workScheduleRequest.category());
         }
         if (workScheduleRequest.start() != null) {
             this.start = workScheduleRequest.start();

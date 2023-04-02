@@ -54,7 +54,7 @@ public class AESUtil {
 
     private IvParameterSpec createIvSpec() {
         try {
-            this.iv = KEY.substring(0, 16);;
+            this.iv = KEY.substring(0, 16);
             return new IvParameterSpec(iv.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             throw new RuntimeException("createIvSpec fail : " +  e.getMessage());

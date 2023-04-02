@@ -12,6 +12,7 @@ import fastcampus.workschedulemanagementbackend.repository.WorkScheduleRepositor
 import fastcampus.workschedulemanagementbackend.security.UserAccountPrincipal;
 import fastcampus.workschedulemanagementbackend.utils.AESUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class WorkScheduleService {
@@ -67,14 +69,13 @@ public class WorkScheduleService {
         String name = aesUtil.decrypt(userAccountPrincipal.name());
         return Optional.ofNullable(userAccount)
                 .map(user -> {
-                            if (workScheduleRequest.category().equals(ScheduleType.LEAVE)) {
+                            if (ScheduleType.valueOf(workScheduleRequest.category()).equals(ScheduleType.LEAVE)) {
                                 LocalDate start = workScheduleRequest.start();
                                 LocalDate end = workScheduleRequest.end();
                                 int leave = (int) ChronoUnit.DAYS.between(start, end) + 1;
                                 user.setRemainedVacationCount(user.getRemainedVacationCount() - leave);
                             }
-                            WorkSchedule workSchedule = workScheduleRequest.toDto(name).toEntity(user);
-                            return workSchedule;
+                    return workScheduleRequest.toDto(name).toEntity(user);
                         }
                 )//DB와 통신할 Entity형태로 변환
                 .map(workSchedule -> WorkScheduleDto.from(scheduleRepository.save(workSchedule), aesUtil))
@@ -88,12 +89,15 @@ public class WorkScheduleService {
 
         String name = aesUtil.decrypt(userAccountPrincipal.name());
         WorkSchedule workSchedule = workScheduleRepository.findById(Long.valueOf(workScheduleRequest.eventId()))
-                .orElseThrow(() -> new BadRequestException(String.format("스케쥴 정보(%d)를 찾을 수 없습니다.", workScheduleRequest.eventId())));
+                .orElseThrow(() -> new BadRequestException(String.format("스케쥴 정보(%s)를 찾을 수 없습니다.", workScheduleRequest.eventId())));
 
         Long workScheduleUserId = workSchedule.getUserAccount().getId();
         checkAdminWithSchedule(userid, userAccountPrincipal, workScheduleUserId, "다른 회원의 스케쥴을 수정할 권한이 없습니다.");
 
-        return Optional.ofNullable(workSchedule)
+        log.error("workScheduleRequest.category() : {}", workScheduleRequest.category());
+        log.error("workSchedule.getCategory() : {}", workSchedule.getCategory());
+
+        return Optional.of(workSchedule)
                 .map(workScheduleEnt -> {
                     LocalDate start = workScheduleRequest.start();
                     LocalDate end = workScheduleRequest.end();
@@ -102,15 +106,14 @@ public class WorkScheduleService {
                     LocalDate exEnd = workScheduleEnt.getEnd();
                     int exLeave = (int) ChronoUnit.DAYS.between(exStart, exEnd) + 1;
 
-                    if (workScheduleRequest.category().equals(ScheduleType.DUTY))
+                    if (ScheduleType.valueOf(workScheduleRequest.category()).equals(ScheduleType.DUTY))
                         newLeave = 0;
                     if (workScheduleEnt.getCategory().equals(ScheduleType.DUTY))
                         exLeave = 0;
                     checkRemainedVacationCount(userAccount, newLeave - exLeave);
                     workScheduleEnt.getUserAccount().setRemainedVacationCount(workScheduleEnt.getUserAccount().getRemainedVacationCount() - newLeave + exLeave);
 
-                    WorkScheduleDto workScheduleDto = WorkScheduleDto.from(workScheduleEnt.update(workScheduleRequest, name), aesUtil);
-                    return workScheduleDto;
+                    return WorkScheduleDto.from(workScheduleEnt.update(workScheduleRequest, name), aesUtil);
                 })
                 .orElseThrow(() -> new BadRequestException("DB와 연결에 실패했습니다."));
     }
