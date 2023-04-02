@@ -1,4 +1,4 @@
-package fastcampus.workschedulemanagementbackend.jwt;
+package fastcampus.workschedulemanagementbackend.common.jwt;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;

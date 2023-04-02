@@ -1,6 +1,6 @@
-package fastcampus.workschedulemanagementbackend.config;
+package fastcampus.workschedulemanagementbackend.common.config;
 
-import fastcampus.workschedulemanagementbackend.security.UserAccountPrincipal;
+import fastcampus.workschedulemanagementbackend.common.security.UserAccountPrincipal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;

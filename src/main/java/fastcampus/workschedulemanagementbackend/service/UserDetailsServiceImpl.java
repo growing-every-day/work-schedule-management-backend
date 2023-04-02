@@ -2,7 +2,7 @@ package fastcampus.workschedulemanagementbackend.service;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
-import fastcampus.workschedulemanagementbackend.security.UserAccountPrincipal;
+import fastcampus.workschedulemanagementbackend.common.security.UserAccountPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

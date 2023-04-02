@@ -1,4 +1,4 @@
-package fastcampus.workschedulemanagementbackend.config;
+package fastcampus.workschedulemanagementbackend.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

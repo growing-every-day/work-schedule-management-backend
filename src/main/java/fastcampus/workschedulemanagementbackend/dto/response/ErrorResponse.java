@@ -1,4 +1,4 @@
-package fastcampus.workschedulemanagementbackend.error;
+package fastcampus.workschedulemanagementbackend.dto.response;
 
 import java.util.List;
 

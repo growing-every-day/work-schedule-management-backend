@@ -2,7 +2,7 @@ package fastcampus.workschedulemanagementbackend.dto;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
-import fastcampus.workschedulemanagementbackend.utils.AESUtil;
+import fastcampus.workschedulemanagementbackend.common.utils.AESUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;

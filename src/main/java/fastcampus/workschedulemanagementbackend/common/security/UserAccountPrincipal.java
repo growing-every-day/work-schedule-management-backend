@@ -1,4 +1,4 @@
-package fastcampus.workschedulemanagementbackend.security;
+package fastcampus.workschedulemanagementbackend.common.security;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;

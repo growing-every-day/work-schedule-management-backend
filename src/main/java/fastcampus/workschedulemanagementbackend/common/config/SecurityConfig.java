@@ -1,9 +1,8 @@
-package fastcampus.workschedulemanagementbackend.config;
+package fastcampus.workschedulemanagementbackend.common.config;
 
-import fastcampus.workschedulemanagementbackend.error.BadRequestException;
-import fastcampus.workschedulemanagementbackend.error.FilterExceptionHandler;
-import fastcampus.workschedulemanagementbackend.jwt.JwtAuthorizationFilter;
-import fastcampus.workschedulemanagementbackend.jwt.JwtTokenProvider;
+import fastcampus.workschedulemanagementbackend.common.error.FilterExceptionHandler;
+import fastcampus.workschedulemanagementbackend.common.jwt.JwtAuthorizationFilter;
+import fastcampus.workschedulemanagementbackend.common.jwt.JwtTokenProvider;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import fastcampus.workschedulemanagementbackend.service.UserAccountService;
 import jakarta.servlet.ServletException;
@@ -23,8 +22,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -36,7 +33,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Spring Security 환경 설정을 구성하기 위한 클래스

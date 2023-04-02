@@ -1,9 +1,6 @@
-package fastcampus.workschedulemanagementbackend.aop;
+package fastcampus.workschedulemanagementbackend.common.aop;
 
-import fastcampus.workschedulemanagementbackend.dto.LoginResponseDto;
-import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
-import fastcampus.workschedulemanagementbackend.error.BadRequestException;
-import fastcampus.workschedulemanagementbackend.service.UserAccountService;
+import fastcampus.workschedulemanagementbackend.dto.response.LoginResponseDto;
 import fastcampus.workschedulemanagementbackend.service.UserLoginLogService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +11,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.util.Optional;
 
 @Slf4j
 @Component
