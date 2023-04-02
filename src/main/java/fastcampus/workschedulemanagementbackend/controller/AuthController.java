@@ -1,7 +1,10 @@
 package fastcampus.workschedulemanagementbackend.controller;
 
 import fastcampus.workschedulemanagementbackend.dto.*;
-import fastcampus.workschedulemanagementbackend.error.FieldValidationException;
+import fastcampus.workschedulemanagementbackend.dto.request.LoginRequestDto;
+import fastcampus.workschedulemanagementbackend.dto.response.LoginResponseDto;
+import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
+import fastcampus.workschedulemanagementbackend.common.error.FieldValidationException;
 import fastcampus.workschedulemanagementbackend.service.UserAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +36,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto user, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
-            throw new FieldValidationException("입력한 값이 올바르지 않습니다.", handleBindingResult(bindingResult));
+            throw new FieldValidationException(ErrorCode.FIELD_VALIDATION_FAILED, handleBindingResult(bindingResult));
         }
 
         LoginResponseDto login = userAuthService.login(user);
