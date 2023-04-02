@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,7 @@ public class ScheduleController {
     private final WorkScheduleService scheduleService;
     private final AESUtil aesUtil;
 
-    @InitBinder("WorkScheduleRequest")
+    @InitBinder("workScheduleRequest")
     void initBinder(WebDataBinder binder) {
         binder.addValidators(new WorkScheduleValidator());
     }
@@ -49,27 +50,30 @@ public class ScheduleController {
 
     @PostMapping(value = "/{userid}/create")
     public ResponseEntity<WorkScheduleDto> createWorkSchedule(@Valid @RequestBody WorkScheduleRequest workScheduleRequest,
+                                                              BindingResult bindingResult,
                                                               @AuthenticationPrincipal UserAccountPrincipal userAccountPrincipal,
-                                                              @PathVariable Long userid,
-                                                              BindingResult bindingResult) {
+                                                              @PathVariable Long userid
+                                                              ) {
         if (bindingResult.hasErrors()) {
-            throw new FieldValidationException("스케쥴 정보를 받아오는데 실패했습니다.", handleBindingResult(bindingResult));
+            FieldError fieldError = bindingResult.getFieldError();
+            throw new BadRequestException(fieldError.getDefaultMessage());
         }
-
         return new ResponseEntity<>(scheduleService.createWorkSchedule(workScheduleRequest, userAccountPrincipal, userid), HttpStatus.OK);
     }
 
     @PostMapping(value = "/{userid}/update")
     public ResponseEntity<WorkScheduleDto> updateWorkSchedule(@Valid @RequestBody WorkScheduleRequest workScheduleRequest,
+                                                              BindingResult bindingResult,
                                                               @AuthenticationPrincipal UserAccountPrincipal userAccountPrincipal,
-                                                              @PathVariable Long userid,
-                                                              BindingResult bindingResult) {
+                                                              @PathVariable Long userid
+                                                              ) {
         if (bindingResult.hasErrors()) {
-            throw new FieldValidationException("스케쥴 정보를 받아오는데 실패했습니다.", handleBindingResult(bindingResult));
+            FieldError fieldError = bindingResult.getFieldError();
+            throw new BadRequestException(fieldError.getDefaultMessage());
         }
 
         if (workScheduleRequest.eventId() == null) {
-            throw new FieldValidationException("eventId 정보를 받아오는데 실패했습니다.", handleBindingResult(bindingResult));
+            throw new BadRequestException("eventId 정보를 받아오는데 실패했습니다.");
         }
 
         return new ResponseEntity<>(scheduleService.updateWorkSchedule(workScheduleRequest, userAccountPrincipal, userid), HttpStatus.OK);

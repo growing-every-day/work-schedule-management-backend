@@ -123,7 +123,7 @@ public class WorkScheduleService {
         WorkSchedule workSchedule = scheduleRepository.findById(eventId)
                 .orElseThrow(() -> new BadRequestException(String.format("스케쥴 정보(%s)를 찾을 수 없습니다.", eventId)));
 
-        if (ChronoUnit.DAYS.between(workSchedule.getStart(), LocalDate.now()) < 0)
+        if (ChronoUnit.DAYS.between(workSchedule.getStart(), LocalDate.now()) > 0)
             throw new BadRequestException("휴가, 당직 중인 일정은 변경할 수 업습니다.");
 
         int addVacationCount = (int) ChronoUnit.DAYS.between(workSchedule.getEnd(), workSchedule.getStart()) + 1;

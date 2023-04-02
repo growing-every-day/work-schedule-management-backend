@@ -8,6 +8,7 @@ import org.springframework.validation.Validator;
 import jakarta.validation.executable.ExecutableValidator;
 import jakarta.validation.metadata.BeanDescriptor;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Set;
 
@@ -35,8 +36,8 @@ public class WorkScheduleValidator implements Validator {
             errors.rejectValue("end", "NotNull", "end_date is null");
             return;
         }
-        if (request.start().compareTo(request.end()) >= 0) {
-            errors.rejectValue("endDate", "Constraint Error", "endDate is earlier than startDate ");
+        if ((int) ChronoUnit.DAYS.between(request.start(), request.end()) < 0) {
+            errors.rejectValue("end", "Constraint Error", "종료일이 시작일보다 빠릅니다.");
             return;
         }
     }
