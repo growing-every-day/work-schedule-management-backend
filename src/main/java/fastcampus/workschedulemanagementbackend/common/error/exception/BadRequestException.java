@@ -1,5 +1,6 @@
-package fastcampus.workschedulemanagementbackend.common.error;
+package fastcampus.workschedulemanagementbackend.common.error.exception;
 
+import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
 import lombok.Getter;
 
 @Getter

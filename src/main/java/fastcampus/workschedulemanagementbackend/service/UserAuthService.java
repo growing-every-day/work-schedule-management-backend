@@ -1,6 +1,9 @@
 package fastcampus.workschedulemanagementbackend.service;
 
 import fastcampus.workschedulemanagementbackend.common.aop.LoginLog;
+import fastcampus.workschedulemanagementbackend.common.error.exception.BadRequestException;
+import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
+import fastcampus.workschedulemanagementbackend.common.error.exception.InvalidUsernamePasswordException;
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.dto.request.LoginRequestDto;
 import fastcampus.workschedulemanagementbackend.dto.response.LoginResponseDto;
@@ -36,10 +39,10 @@ public class UserAuthService {
     public LoginResponseDto login(LoginRequestDto request) throws Exception {
 
         UserAccount userAccount = userAccountRepository.findByUsername(request.getUsername()).orElseThrow(() ->
-                new BadCredentialsException("입력한 아이디가 올바르지 않습니다."));
+                new InvalidUsernamePasswordException(ErrorCode.USERNAME_OR_PASSWORD_WRONG));
 
         if (!passwordEncoder.matches(request.getPassword(), userAccount.getPassword())) {
-            throw new BadCredentialsException("입력한 비밀번호가 올바르지 않습니다.");
+            throw new InvalidUsernamePasswordException(ErrorCode.USERNAME_OR_PASSWORD_WRONG);
         }
 
         String newRefreshToken = createRefreshToken(userAccount);
@@ -88,7 +91,7 @@ public class UserAuthService {
         }
 
         UserAccount userAccount = userAccountRepository.findByUsername(userName).orElseThrow(() ->
-                new BadCredentialsException("잘못된 계정정보입니다."));
+                new BadRequestException(ErrorCode.USER_NOT_FOUND));
         String currentRefreshToken = userAccount.getRefreshToken();
         try {
             Claims claims = jwtProvider.verifyToken(currentRefreshToken);

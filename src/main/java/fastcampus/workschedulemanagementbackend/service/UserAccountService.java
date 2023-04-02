@@ -2,7 +2,7 @@ package fastcampus.workschedulemanagementbackend.service;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
-import fastcampus.workschedulemanagementbackend.common.error.BadRequestException;
+import fastcampus.workschedulemanagementbackend.common.error.exception.BadRequestException;
 import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import fastcampus.workschedulemanagementbackend.common.utils.AESUtil;

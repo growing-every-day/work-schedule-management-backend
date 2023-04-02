@@ -4,7 +4,7 @@ import fastcampus.workschedulemanagementbackend.dto.*;
 import fastcampus.workschedulemanagementbackend.dto.request.LoginRequestDto;
 import fastcampus.workschedulemanagementbackend.dto.response.LoginResponseDto;
 import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
-import fastcampus.workschedulemanagementbackend.common.error.FieldValidationException;
+import fastcampus.workschedulemanagementbackend.common.error.exception.FieldValidationException;
 import fastcampus.workschedulemanagementbackend.service.UserAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
