@@ -36,12 +36,12 @@ public class WorkSchedule extends BaseWriterEntity {
 
     @Setter
     @Column(nullable = false, name = "start_date")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy/MM/dd", timezone="Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd", timezone = "Asia/Seoul")
     private LocalDate start; // 시작일
 
     @Setter
     @Column(nullable = false, name = "end_date")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy/MM/dd", timezone="Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd", timezone = "Asia/Seoul")
     private LocalDate end; // 종료일
 
     @Setter
@@ -49,6 +49,14 @@ public class WorkSchedule extends BaseWriterEntity {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     //@JsonBackReference
     private UserAccount userAccount;
+
+    @Column()
+    @Setter
+    private String createdByName; //생성자이름
+
+    @Column()
+    @Setter
+    private String modifiedByName; //수정자이름
     protected WorkSchedule() {
     }
 
@@ -58,9 +66,9 @@ public class WorkSchedule extends BaseWriterEntity {
         this.start = startDate;
         this.end = endDate;
         if (createdByName != null)
-            this.setCreatedByName(createdByName);
+            this.createdByName = createdByName;
         if (modifiedByName != null)
-            this.setCreatedByName(modifiedByName);
+            this.modifiedByName = modifiedByName;
     }
 
     public static WorkSchedule of(UserAccount userAccount, ScheduleType category, LocalDate startDate, LocalDate endDate, String createdByName, String modifiedByName) {
@@ -80,16 +88,16 @@ public class WorkSchedule extends BaseWriterEntity {
     }
 
     public WorkSchedule update(WorkScheduleRequest workScheduleRequest, String modifiedByName) {
-        if (workScheduleRequest.category() != null){
+        if (workScheduleRequest.category() != null) {
             this.category = workScheduleRequest.category();
         }
-        if (workScheduleRequest.start() != null){
+        if (workScheduleRequest.start() != null) {
             this.start = workScheduleRequest.start();
         }
-        if (workScheduleRequest.end() != null){
+        if (workScheduleRequest.end() != null) {
             this.end = workScheduleRequest.end();
         }
-        if (modifiedByName != null){
+        if (modifiedByName != null) {
             setModifiedByName(modifiedByName);
         }
 

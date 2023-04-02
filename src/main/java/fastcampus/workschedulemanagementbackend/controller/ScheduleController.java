@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/schedule")
+@RequestMapping("/api/schedules")
 public class ScheduleController {
     private final WorkScheduleService scheduleService;
     private final AESUtil aesUtil;
@@ -43,7 +43,6 @@ public class ScheduleController {
             @RequestParam(required = false, value = "userid") Long id,
             @RequestParam(value = "year") String year,
             @RequestParam(value = "month") String month) throws ParseException {
-        System.out.println("ScheduleController.getAllSchedules");
         List<WorkScheduleDto> scheduleDtoList = scheduleService.getAllSchedules(id, year, month);
         return new ResponseEntity<>(scheduleDtoList, HttpStatus.OK);
     }

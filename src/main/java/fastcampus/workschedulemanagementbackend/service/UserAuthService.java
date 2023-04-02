@@ -43,12 +43,10 @@ public class UserAuthService {
         }
 
         String newRefreshToken = createRefreshToken(userAccount);
-        log.error("userAccount : {}", userAccount);
         TokenDto tokenDto = TokenDto.builder()
                 .accessToken(jwtTokenProvider.createAccessToken(userAccount.getUsername(), userAccount.getRole()))
                 .refreshToken(newRefreshToken)
                 .build();
-        log.error("userAccount : {}", userAccount);
 
         return LoginResponseDto.from(userAccount, tokenDto, aesUtil);
     }

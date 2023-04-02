@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +39,6 @@ public class WorkScheduleService {
         if (month.length() == 1) {
             month = "0" + month;
         }
-        System.out.println("id = " + id);
         String dateStr = year + "/" + month + "/01";
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
         Date date = formatter.parse(dateStr);
@@ -60,7 +58,7 @@ public class WorkScheduleService {
 
     @Transactional
     public WorkScheduleDto createWorkSchedule(WorkScheduleRequest workScheduleRequest, UserAccountPrincipal userAccountPrincipal, Long userid) {
-        checkAdmin(userid, userAccountPrincipal, "다른 회원을 수정할 권한이 없습니다.");
+        checkAdmin(userid, userAccountPrincipal, "다른 회원의 스케쥴을 생성할 권한이 없습니다.");
 
         UserAccount userAccount = userAccountRepository.findById(userid)
                 .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다", userid)));
@@ -73,7 +71,6 @@ public class WorkScheduleService {
                                 LocalDate start = workScheduleRequest.start();
                                 LocalDate end = workScheduleRequest.end();
                                 int leave = (int) ChronoUnit.DAYS.between(start, end) + 1;
-                                System.out.println("leave = " + leave);
                                 user.setRemainedVacationCount(user.getRemainedVacationCount() - leave);
                             }
                             WorkSchedule workSchedule = workScheduleRequest.toDto(name).toEntity(user);
@@ -94,7 +91,7 @@ public class WorkScheduleService {
                 .orElseThrow(() -> new BadRequestException(String.format("스케쥴 정보(%d)를 찾을 수 없습니다.", workScheduleRequest.eventId())));
 
         Long workScheduleUserId = workSchedule.getUserAccount().getId();
-        checkAdminWithSchedule(userid, userAccountPrincipal, workScheduleUserId, "다른 회원을 수정할 권한이 없습니다.");
+        checkAdminWithSchedule(userid, userAccountPrincipal, workScheduleUserId, "다른 회원의 스케쥴을 수정할 권한이 없습니다.");
 
         return Optional.ofNullable(workSchedule)
                 .map(workScheduleEnt -> {
@@ -132,7 +129,7 @@ public class WorkScheduleService {
         int addVacationCount = (int) ChronoUnit.DAYS.between(workSchedule.getEnd(), workSchedule.getStart()) + 1;
 
         Long workScheduleUserId = workSchedule.getUserAccount().getId();
-        checkAdminWithSchedule(userid, userAccountPrincipal, workScheduleUserId, "다른 회원을 수정할 권한이 없습니다.");
+        checkAdminWithSchedule(userid, userAccountPrincipal, workScheduleUserId, "다른 회원의 스케쥴 삭제할 권한이 없습니다.");
         scheduleRepository.deleteById(eventId);
         userAccount.setRemainedVacationCount(userAccount.getRemainedVacationCount() + addVacationCount);
         return true;
@@ -157,7 +154,7 @@ public class WorkScheduleService {
 
     private void checkRemainedVacationCount(UserAccount userAccount, int leaveDay) {
         if (leaveDay != 0 && leaveDay > userAccount.getRemainedVacationCount()) {
-            throw new BadRequestException(String.format("사용가능한 휴가일 수가 부족합니다. 사용가능한 휴가일 수는 %d 입니다.", userAccount.getRemainedVacationCount()));
+            throw new BadRequestException(String.format("사용가능한 휴가일 수가 부족합니다. 사용가능한 휴가일 수는 %d일 입니다.", userAccount.getRemainedVacationCount()));
         }
     }
 }
