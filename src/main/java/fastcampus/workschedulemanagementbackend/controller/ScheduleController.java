@@ -5,9 +5,10 @@ import fastcampus.workschedulemanagementbackend.dto.FieldErrorDto;
 import fastcampus.workschedulemanagementbackend.dto.ValidationErrorDto;
 import fastcampus.workschedulemanagementbackend.dto.WorkScheduleDto;
 import fastcampus.workschedulemanagementbackend.dto.request.workschedule.WorkScheduleRequest;
-import fastcampus.workschedulemanagementbackend.error.BadRequestException;
-import fastcampus.workschedulemanagementbackend.error.FieldValidationException;
-import fastcampus.workschedulemanagementbackend.security.UserAccountPrincipal;
+import fastcampus.workschedulemanagementbackend.common.error.BadRequestException;
+import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
+import fastcampus.workschedulemanagementbackend.common.error.FieldValidationException;
+import fastcampus.workschedulemanagementbackend.common.security.UserAccountPrincipal;
 import fastcampus.workschedulemanagementbackend.service.WorkScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class ScheduleController {
                                                               @PathVariable Long userid
                                                               ) {
         if (bindingResult.hasErrors()) {
-            throw new FieldValidationException("입력한 값이 올바르지 않습니다.", handleBindingResult(bindingResult));
+            throw new FieldValidationException(ErrorCode.FIELD_VALIDATION_FAILED, handleBindingResult(bindingResult));
         }
         return new ResponseEntity<>(scheduleService.createWorkSchedule(workScheduleRequest, userAccountPrincipal, userid), HttpStatus.OK);
     }
@@ -61,11 +62,11 @@ public class ScheduleController {
                                                               @PathVariable Long userid
                                                               ) {
         if (bindingResult.hasErrors()) {
-            throw new FieldValidationException("입력한 값이 올바르지 않습니다.", handleBindingResult(bindingResult));
+            throw new FieldValidationException(ErrorCode.FIELD_VALIDATION_FAILED, handleBindingResult(bindingResult));
         }
 
         if (workScheduleRequest.eventId() == null) {
-            throw new BadRequestException("eventId 정보를 받아오는데 실패했습니다.");
+            throw new BadRequestException(ErrorCode.NO_EVENT_ID);
         }
 
         return new ResponseEntity<>(scheduleService.updateWorkSchedule(workScheduleRequest, userAccountPrincipal, userid), HttpStatus.OK);
@@ -77,7 +78,7 @@ public class ScheduleController {
                                       @PathVariable Long userid) {
 
         if (workScheduleRequest.eventId() == null) {
-            throw new BadRequestException("eventId를 받아오는데 실패했습니다.");
+            throw new BadRequestException(ErrorCode.NO_EVENT_ID);
         }
 
         return scheduleService.deleteWorkSchedule(Long.valueOf(workScheduleRequest.eventId()), userid, userAccountPrincipal);

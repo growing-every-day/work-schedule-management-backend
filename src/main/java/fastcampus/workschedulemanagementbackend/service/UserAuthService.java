@@ -1,13 +1,13 @@
 package fastcampus.workschedulemanagementbackend.service;
 
-import fastcampus.workschedulemanagementbackend.aop.LoginLog;
+import fastcampus.workschedulemanagementbackend.common.aop.LoginLog;
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
-import fastcampus.workschedulemanagementbackend.dto.LoginRequestDto;
-import fastcampus.workschedulemanagementbackend.dto.LoginResponseDto;
+import fastcampus.workschedulemanagementbackend.dto.request.LoginRequestDto;
+import fastcampus.workschedulemanagementbackend.dto.response.LoginResponseDto;
 import fastcampus.workschedulemanagementbackend.dto.TokenDto;
-import fastcampus.workschedulemanagementbackend.jwt.JwtTokenProvider;
+import fastcampus.workschedulemanagementbackend.common.jwt.JwtTokenProvider;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
-import fastcampus.workschedulemanagementbackend.utils.AESUtil;
+import fastcampus.workschedulemanagementbackend.common.utils.AESUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;

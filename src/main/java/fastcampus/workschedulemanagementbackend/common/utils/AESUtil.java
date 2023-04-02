@@ -1,4 +1,4 @@
-package fastcampus.workschedulemanagementbackend.utils;
+package fastcampus.workschedulemanagementbackend.common.utils;
 
 import org.springframework.stereotype.Component;
 

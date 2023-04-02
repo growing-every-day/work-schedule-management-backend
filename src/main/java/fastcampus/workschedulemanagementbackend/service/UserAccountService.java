@@ -2,11 +2,10 @@ package fastcampus.workschedulemanagementbackend.service;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
-import fastcampus.workschedulemanagementbackend.error.BadRequestException;
-import fastcampus.workschedulemanagementbackend.error.ErrorCode;
-import fastcampus.workschedulemanagementbackend.error.wsAppException;
+import fastcampus.workschedulemanagementbackend.common.error.BadRequestException;
+import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
-import fastcampus.workschedulemanagementbackend.utils.AESUtil;
+import fastcampus.workschedulemanagementbackend.common.utils.AESUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +28,7 @@ public class UserAccountService {
     public UserAccountDto join(UserAccountDto userAccountDto){
         //회원가입하려는 username으로 회원가입된 user가 있는지
         userAccountRepository.findByUsername(userAccountDto.username()).ifPresent(it ->{
-            throw new wsAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s 는 중복된 아이디입니다.", userAccountDto.username()));
+            throw new BadRequestException(ErrorCode.DUPLICATED_USER_NAME);
         });
         //회원가입 진행 = user를 등록
         UserAccount userAccount = userAccountRepository.save(userAccountDto.toEntity(passwordEncoder, aesUtil));
@@ -50,23 +49,23 @@ public class UserAccountService {
     public Optional<UserAccountDto> getUserAccountById(Long id) {
 
         if (id == null) {
-            throw new BadRequestException("회원 번호는 null 일 수 없습니다");
+            throw new BadRequestException(ErrorCode.USER_ID_NULL);
         }
 
         return Optional.ofNullable(userAccountRepository.findById(id)
                 .map(user -> UserAccountDto.fromWithoutPassword(user, aesUtil))
-                .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다", id))));
+                .orElseThrow(() -> new BadRequestException(ErrorCode.USER_NOT_FOUND)));
     }
 
     @Transactional
     public Optional<UserAccountDto> updateUserAccount(Long id, UserAccountDto userAccountDto) {
 
         if (id == null) {
-            throw new BadRequestException("회원 번호는 null 일 수 없습니다");
+            throw new BadRequestException(ErrorCode.USER_ID_NULL);
         }
 
         if (userAccountDto == null) {
-            throw new BadRequestException("회원 정보는 null 일 수 없습니다");
+            throw new BadRequestException(ErrorCode.USER_ACCOUNT_NULL);
         }
 
         return Optional.ofNullable(userAccountRepository.findById(id)
@@ -75,13 +74,13 @@ public class UserAccountService {
                     return existingUserAccount;
                 })
                 .map(userAccount -> UserAccountDto.fromWithoutPassword(userAccount, aesUtil))
-                .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다", id))));
+                .orElseThrow(() -> new BadRequestException(ErrorCode.USER_NOT_FOUND)));
     }
 
     @Transactional
     public Optional<Boolean> deleteUserAccount(Long id) {
         if (id == null) {
-            throw new BadRequestException("회원 번호는 null 일 수 없습니다");
+            throw new BadRequestException(ErrorCode.USER_ID_NULL);
         }
 
         return Optional.ofNullable(userAccountRepository.findById(id)
@@ -89,6 +88,6 @@ public class UserAccountService {
                     userAccountRepository.delete(existingUserAccount);
                     return true;
                 })
-                .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다", id))));
+                .orElseThrow(() -> new BadRequestException(ErrorCode.USER_NOT_FOUND)));
     }
 }

@@ -26,6 +26,7 @@ public class WorkScheduleValidator implements Validator {
             errors.rejectValue("end", "NotNull", "end_date is null");
             return;
         }
+
         if ((int) ChronoUnit.DAYS.between(request.start(), request.end()) < 0) {
             errors.rejectValue("end", "Constraint Error", "종료일이 시작일보다 빠릅니다.");
             return;

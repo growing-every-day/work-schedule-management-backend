@@ -1,4 +1,4 @@
-package fastcampus.workschedulemanagementbackend.aop;
+package fastcampus.workschedulemanagementbackend.common.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

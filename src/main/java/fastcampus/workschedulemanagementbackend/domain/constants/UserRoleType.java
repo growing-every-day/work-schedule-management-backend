@@ -1,6 +1,7 @@
 package fastcampus.workschedulemanagementbackend.domain.constants;
 
-import fastcampus.workschedulemanagementbackend.error.BadRequestException;
+import fastcampus.workschedulemanagementbackend.common.error.BadRequestException;
+import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
 import lombok.Getter;
 
 public enum UserRoleType {
@@ -20,6 +21,6 @@ public enum UserRoleType {
                 return userRoleType;
             }
         }
-        throw new BadRequestException("해당하는 유저 권한이 없습니다.");
+        throw new BadRequestException(ErrorCode.INVALID_USER_ROLE_TYPE);
     }
 }

@@ -3,11 +3,10 @@ package fastcampus.workschedulemanagementbackend.dto;
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.domain.WorkSchedule;
 import fastcampus.workschedulemanagementbackend.domain.constants.ScheduleType;
-import fastcampus.workschedulemanagementbackend.utils.AESUtil;
+import fastcampus.workschedulemanagementbackend.common.utils.AESUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public record WorkScheduleDto(
         Long eventId,

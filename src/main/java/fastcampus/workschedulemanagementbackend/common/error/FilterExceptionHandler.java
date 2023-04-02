@@ -1,14 +1,14 @@
-package fastcampus.workschedulemanagementbackend.error;
+package fastcampus.workschedulemanagementbackend.common.error;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fastcampus.workschedulemanagementbackend.dto.response.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -34,19 +34,22 @@ public class FilterExceptionHandler extends OncePerRequestFilter {
         } catch (AccessDeniedException e) {
             // 권한이 없는 요청을 함
             setErrorResponse(response, ErrorCode.AUTHORIZATION_WRONG);
+        } catch (Exception e) {
+            // 그 외 오류
+            setErrorResponse(response, ErrorCode.SERVER_ERROR);
         }
     }
 
     private void setErrorResponse(
             HttpServletResponse response,
-            ErrorCode errorType
+            ErrorCode errorCode
     ) throws IOException {
 
-        response.setStatus(errorType.getStatus().value());
+        response.setStatus(errorCode.getStatus().value());
         response.setCharacterEncoding("utf-8");
         response.setContentType("raw/json; charset=UTF-8");
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        response.getWriter().write(gson.toJson(ErrorResponse.of(errorType.getErrorCode(), errorType.getMessage())));
+        response.getWriter().write(gson.toJson(ErrorResponse.of(errorCode.getCode(), errorCode.getMessage())));
     }
 
 }

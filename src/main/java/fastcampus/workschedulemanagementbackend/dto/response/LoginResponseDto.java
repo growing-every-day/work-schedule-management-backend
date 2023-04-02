@@ -1,8 +1,9 @@
-package fastcampus.workschedulemanagementbackend.dto;
+package fastcampus.workschedulemanagementbackend.dto.response;
 
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
-import fastcampus.workschedulemanagementbackend.utils.AESUtil;
+import fastcampus.workschedulemanagementbackend.dto.TokenDto;
+import fastcampus.workschedulemanagementbackend.common.utils.AESUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
