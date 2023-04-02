@@ -70,7 +70,7 @@ public class UserAccountService {
 
         return Optional.ofNullable(userAccountRepository.findById(id)
                 .map(existingUserAccount -> {
-                    existingUserAccount.update(userAccountDto);
+                    existingUserAccount.update(userAccountDto, passwordEncoder, aesUtil);
                     return existingUserAccount;
                 })
                 .map(userAccount -> UserAccountDto.fromWithoutPassword(userAccount, aesUtil))

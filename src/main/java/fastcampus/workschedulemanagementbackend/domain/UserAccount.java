@@ -1,11 +1,13 @@
 package fastcampus.workschedulemanagementbackend.domain;
 
+import fastcampus.workschedulemanagementbackend.common.utils.AESUtil;
 import fastcampus.workschedulemanagementbackend.domain.constants.UserRoleType;
 import fastcampus.workschedulemanagementbackend.dto.UserAccountDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -64,7 +66,7 @@ public class UserAccount extends BaseTimeEntity {
 
     @ToString.Exclude
     @OrderBy("loginTime DESC")
-    @OneToMany(mappedBy = "userAccount")
+    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
     private final Set<UserLoginLog> userLoginLogs = new LinkedHashSet<>();
     protected UserAccount() {
     }
@@ -93,16 +95,16 @@ public class UserAccount extends BaseTimeEntity {
         return Objects.hash(this.getId());
     }
 
-    public void update(UserAccountDto userAccountDto) {
+    public void update(UserAccountDto userAccountDto, PasswordEncoder passwordEncoder, AESUtil aesUtil) {
 
         if (userAccountDto.password() != null) {
-            this.password = userAccountDto.password();
+            this.password = passwordEncoder.encode(userAccountDto.password());
         }
         if (userAccountDto.name() != null) {
-            this.name = userAccountDto.name();
+            this.name = aesUtil.encrypt(userAccountDto.name());
         }
         if (userAccountDto.email() != null) {
-            this.email = userAccountDto.email();
+            this.email = aesUtil.encrypt(userAccountDto.email());
         }
         if (userAccountDto.role() != null) {
             this.role = userAccountDto.role();
