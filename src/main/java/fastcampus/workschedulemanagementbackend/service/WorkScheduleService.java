@@ -6,9 +6,8 @@ import fastcampus.workschedulemanagementbackend.domain.constants.ScheduleType;
 import fastcampus.workschedulemanagementbackend.dto.WorkScheduleDto;
 import fastcampus.workschedulemanagementbackend.dto.request.workschedule.WorkScheduleRequest;
 import fastcampus.workschedulemanagementbackend.error.BadRequestException;
-import fastcampus.workschedulemanagementbackend.repository.ScheduleRepository;
-import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import fastcampus.workschedulemanagementbackend.repository.WorkScheduleRepository;
+import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import fastcampus.workschedulemanagementbackend.security.UserAccountPrincipal;
 import fastcampus.workschedulemanagementbackend.utils.AESUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +27,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class WorkScheduleService {
-    private final ScheduleRepository scheduleRepository;
+    private final WorkScheduleRepository scheduleRepository;
     private final UserAccountRepository userAccountRepository;
 
     private final AESUtil aesUtil;
-    private final WorkScheduleRepository workScheduleRepository;
 
     @Transactional
     public List<WorkScheduleDto> getAllSchedules(Long id, String year, String month) throws ParseException {
@@ -87,7 +85,7 @@ public class WorkScheduleService {
                 .orElseThrow(() -> new BadRequestException(String.format("회원 번호(%d)를 찾을 수 없습니다.", userid)));
 
         String name = aesUtil.decrypt(userAccountPrincipal.name());
-        WorkSchedule workSchedule = workScheduleRepository.findById(Long.valueOf(workScheduleRequest.eventId()))
+        WorkSchedule workSchedule = scheduleRepository.findById(Long.valueOf(workScheduleRequest.eventId()))
                 .orElseThrow(() -> new BadRequestException(String.format("스케쥴 정보(%d)를 찾을 수 없습니다.", workScheduleRequest.eventId())));
 
         Long workScheduleUserId = workSchedule.getUserAccount().getId();
