@@ -5,7 +5,7 @@ import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.dto.request.LoginRequestDto;
 import fastcampus.workschedulemanagementbackend.dto.response.LoginResponseDto;
 import fastcampus.workschedulemanagementbackend.dto.TokenDto;
-import fastcampus.workschedulemanagementbackend.common.jwt.JwtTokenProvider;
+import fastcampus.workschedulemanagementbackend.common.jwt.JwtProvider;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import fastcampus.workschedulemanagementbackend.common.utils.AESUtil;
 import io.jsonwebtoken.Claims;
@@ -23,7 +23,7 @@ public class UserAuthService {
 
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
     private final AESUtil aesUtil;
 
     /**
@@ -44,7 +44,7 @@ public class UserAuthService {
 
         String newRefreshToken = createRefreshToken(userAccount);
         TokenDto tokenDto = TokenDto.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(userAccount.getUsername(), userAccount.getRole()))
+                .accessToken(jwtProvider.createAccessToken(userAccount.getUsername(), userAccount.getRole()))
                 .refreshToken(newRefreshToken)
                 .build();
 
@@ -61,7 +61,7 @@ public class UserAuthService {
             return null;
         }
 
-        String newRefreshToken = jwtTokenProvider.createRefreshToken(userAccount);
+        String newRefreshToken = jwtProvider.createRefreshToken(userAccount);
         if (newRefreshToken == null) {
             return null;
         }
@@ -72,7 +72,7 @@ public class UserAuthService {
     }
 
     /**
-     * access, refresh 토큰 재발급
+     * access 토큰 재발급
      * @param accessToken 엑세스 토큰
      * @return
      * @throws Exception
@@ -81,7 +81,7 @@ public class UserAuthService {
         String userName = null;
 
         try{
-            userName = jwtTokenProvider.getUsernameByToken(accessToken);
+            userName = jwtProvider.getUsernameByToken(accessToken);
         } catch (ExpiredJwtException ex){
             // access 토큰이 만료됐으면
             userName = ex.getClaims().getSubject();
@@ -91,7 +91,7 @@ public class UserAuthService {
                 new BadCredentialsException("잘못된 계정정보입니다."));
         String currentRefreshToken = userAccount.getRefreshToken();
         try {
-            Claims claims = jwtTokenProvider.verifyToken(currentRefreshToken);
+            Claims claims = jwtProvider.verifyToken(currentRefreshToken);
         } catch (ExpiredJwtException | IllegalArgumentException e) {
             // refresh token이 만료됐거나 null이면 재로그인을 해야함
             throw new ExpiredJwtException(null, null, null);
@@ -99,10 +99,9 @@ public class UserAuthService {
             throw e;
         }
 
-        String newRefreshToken = createRefreshToken(userAccount);
         return TokenDto.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(userName, userAccount.getRole()))
-                .refreshToken(newRefreshToken)
+                .accessToken(jwtProvider.createAccessToken(userName, userAccount.getRole()))
+                .refreshToken(currentRefreshToken)
                 .build();
     }
 
@@ -114,7 +113,7 @@ public class UserAuthService {
     public boolean logout(String accessToken) {
         String userName = null;
         try {
-            Claims claims = jwtTokenProvider.verifyToken(accessToken);
+            Claims claims = jwtProvider.verifyToken(accessToken);
             userName = claims.getSubject();
         } catch (ExpiredJwtException e) {
             userName = e.getClaims().getSubject();
@@ -128,7 +127,6 @@ public class UserAuthService {
         userAccount.setRefreshToken("");
         // refresh token을 빈 문자열로 업데이트 한다. (지워준다)
         userAccountRepository.updateRefreshToken("", userAccount.getId());
-
         return true;
     }
 }

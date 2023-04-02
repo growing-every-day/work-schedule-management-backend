@@ -30,9 +30,8 @@ public enum ErrorCode {
     DUPLICATED_SCHEDULE(20, HttpStatus.BAD_REQUEST, "요청한 날짜가 이미 신청한 당직 또는 휴가 날짜와 중복됩니다."),
     SERVER_ERROR(99,HttpStatus.INTERNAL_SERVER_ERROR ,"서버 오류로 정상적으로 요청을 처리할 수 없습니다.");
 
-
-    private int code;
-    private HttpStatus status;
-    private String message;
+    private int code;           // 프론트엔드 팀과 합의한 정수형 에러코드
+    private HttpStatus status;  // reponse status 값
+    private String message;     // 오류에 관련한 메세지
 }
 

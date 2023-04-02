@@ -1,10 +1,9 @@
 package fastcampus.workschedulemanagementbackend.common.config;
 
 import fastcampus.workschedulemanagementbackend.common.error.FilterExceptionHandler;
-import fastcampus.workschedulemanagementbackend.common.jwt.JwtAuthorizationFilter;
-import fastcampus.workschedulemanagementbackend.common.jwt.JwtTokenProvider;
+import fastcampus.workschedulemanagementbackend.common.jwt.JwtFilter;
+import fastcampus.workschedulemanagementbackend.common.jwt.JwtProvider;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
-import fastcampus.workschedulemanagementbackend.service.UserAccountService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,9 +43,8 @@ import java.io.IOException;
 @EnableWebSecurity
 @Slf4j
 public class SecurityConfig {
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
     private final UserAccountRepository userAccountRepository;
-    private final UserAccountService userAccountService;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -100,8 +98,8 @@ public class SecurityConfig {
         return http.build();
     }
 
-    JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtTokenProvider, userAccountService, userAccountRepository);
+    JwtFilter jwtAuthorizationFilter() {
+        return new JwtFilter(jwtProvider, userAccountRepository);
     }
 
     @Bean

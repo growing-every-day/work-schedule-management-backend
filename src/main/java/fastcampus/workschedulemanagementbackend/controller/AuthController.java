@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.stream.Collectors;
 @Slf4j
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -28,7 +27,6 @@ public class AuthController {
 
     /**
      * 로그인 시 access 토큰, refresh 토큰 모두 새로 만들어준다.
-     *
      * @param user
      * @return
      * @throws Exception
@@ -44,7 +42,7 @@ public class AuthController {
     }
 
     /**
-     * access토큰 내부의 유저 정보를 확인한 후 access, refresh 토큰 모두 새로 만들어준다.
+     * access토큰 내부의 유저 정보를 확인한 후 access 토큰 새로 만들어준다.
      *
      * @param accessToken 엑세스 토큰
      * @return
