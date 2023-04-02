@@ -43,7 +43,7 @@ public class WorkScheduleService {
         List<WorkSchedule> schedules = id != null ?
                 scheduleRepository.findAllByUserAccountId(id, date)
                 :
-                scheduleRepository.findAllWithUserAccount();
+                scheduleRepository.findAllWithUserAccount(date);
         if (schedules.isEmpty()) {
             throw new BadRequestException("스케줄 정보가 존재하지 않습니다.");
         }
