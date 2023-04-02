@@ -9,6 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -34,6 +35,9 @@ public class FilterExceptionHandler extends OncePerRequestFilter {
         } catch (AccessDeniedException e) {
             // 권한이 없는 요청을 함
             setErrorResponse(response, ErrorCode.AUTHORIZATION_WRONG);
+        } catch (BadCredentialsException e) {
+            // 잘못된 계정정보
+            setErrorResponse(response, ErrorCode.BAD_CREDENTIALS);
         } catch (Exception e) {
             // 그 외 오류
             setErrorResponse(response, ErrorCode.SERVER_ERROR);

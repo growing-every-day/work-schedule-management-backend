@@ -1,6 +1,6 @@
 package fastcampus.workschedulemanagementbackend.domain.constants;
 
-import fastcampus.workschedulemanagementbackend.common.error.BadRequestException;
+import fastcampus.workschedulemanagementbackend.common.error.exception.BadRequestException;
 import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
 import lombok.Getter;
 

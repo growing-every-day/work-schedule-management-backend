@@ -1,5 +1,6 @@
 package fastcampus.workschedulemanagementbackend.common.jwt;
 
+import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import io.jsonwebtoken.Claims;
@@ -39,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 Claims claims = jwtProvider.verifyToken(accessToken);
                 UserAccount userAccount = userAccountRepository.findByUsername(claims.getSubject()).orElseThrow(() ->
-                        new BadCredentialsException("access token의 잘못된 계정정보입니다."));
+                        new BadCredentialsException("Access Token의 잘못된 계정정보입니다."));
                 // access 토큰 생성
                 String newAccessToken = jwtProvider.createAccessToken(userAccount.getUsername(), userAccount.getRole());
                 Authentication auth = jwtProvider.getAuthentication(newAccessToken);

@@ -28,6 +28,8 @@ public enum ErrorCode {
     INVALID_USER_ROLE_TYPE(18, HttpStatus.BAD_REQUEST, "유효하지 않은 유저 권한 타입입니다."),
     NO_ADMIN_NO_OWN_SCHEDULE(19, HttpStatus.BAD_REQUEST, "다른 회원의 스케쥴을 수정할 권한이 없습니다."),
     DUPLICATED_SCHEDULE(20, HttpStatus.BAD_REQUEST, "요청한 날짜가 이미 신청한 당직 또는 휴가 날짜와 중복됩니다."),
+    BAD_CREDENTIALS(21, HttpStatus.BAD_REQUEST, "Access Token의 잘못된 계정정보입니다."),
+    USERNAME_OR_PASSWORD_WRONG(22, HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 올바르지 않습니다."),
     SERVER_ERROR(99,HttpStatus.INTERNAL_SERVER_ERROR ,"서버 오류로 정상적으로 요청을 처리할 수 없습니다.");
 
     private int code;           // 프론트엔드 팀과 합의한 정수형 에러코드

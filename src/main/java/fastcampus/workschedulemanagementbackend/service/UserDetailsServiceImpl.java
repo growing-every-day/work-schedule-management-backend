@@ -1,5 +1,7 @@
 package fastcampus.workschedulemanagementbackend.service;
 
+import fastcampus.workschedulemanagementbackend.common.error.exception.BadRequestException;
+import fastcampus.workschedulemanagementbackend.common.error.ErrorCode;
 import fastcampus.workschedulemanagementbackend.domain.UserAccount;
 import fastcampus.workschedulemanagementbackend.repository.UserAccountRepository;
 import fastcampus.workschedulemanagementbackend.common.security.UserAccountPrincipal;
@@ -17,8 +19,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserAccount userAccount =  userAccountRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        UserAccount userAccount = userAccountRepository.findByUsername(username)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.USER_NOT_FOUND));
 
         return UserAccountPrincipal.from(userAccount);
     }
