@@ -1,7 +1,6 @@
 package fastcampus.workschedulemanagementbackend.common.error;
 
 import lombok.Getter;
-
 @Getter
 public class InvalidRemainedVacationException extends RuntimeException {
 

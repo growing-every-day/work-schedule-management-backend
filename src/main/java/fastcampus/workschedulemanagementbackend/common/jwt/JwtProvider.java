@@ -11,26 +11,24 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
 
-// 토큰을 생성하고 검증하는 클래스입니다.
-// 해당 컴포넌트는 필터클래스에서 사전 검증을 거칩니다.
+/**
+ * 토큰을 생성하고 검증하는 등 토큰을 다루는 주요 함수가 정의된 클래스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class JwtTokenProvider {
+public class JwtProvider {
 
     private String secretKey = "workschedulesecretkey";
 
-    // 엑세스 토큰 유효시간 1분
-    static final long ACCESS_TOKEN_VALID_MILLIE_SEC_TIME = 1000L * 60;
+    // 엑세스 토큰 유효시간 1시간
+    static final long ACCESS_TOKEN_VALID_MILLIE_SEC_TIME = 1000L * 60 * 60;
 
-    // 리프레시 토큰 유효시간 3분
-    static final long REFRESH_TOKEN_VALID_MILLIE_SEC_TIME = 1000L * 180;
+    // 리프레시 토큰 유효시간 일주일
+    static final long REFRESH_TOKEN_VALID_MILLIE_SEC_TIME = 1000L * 60 * 60 * 24 * 7;
 
     private final UserDetailsService userDetailsService;
 
@@ -80,7 +78,7 @@ public class JwtTokenProvider {
     /**
      * JWT 토큰에서 인증 정보 생성
      * @param token
-     * @return
+     * @return UsernamePasswordAuthenticationToken
      */
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(getUsernameByToken(token));
@@ -90,9 +88,9 @@ public class JwtTokenProvider {
     /**
      * 토큰에서 user name 추출
      * @param token
-     * @return
+     * @return String
      */
-    public String getUsernameByToken( String token) {
+    public String getUsernameByToken(String token) {
         Claims claims = verifyToken(token);
         return claims.getSubject();
     }
@@ -111,32 +109,7 @@ public class JwtTokenProvider {
     }
 
     /**
-     * BEARER 엑세스 토큰 유효성 검사
-     * @param token 헤더에 붙어서 온 엑세스 토큰
-     * @return
-     */
-    public Claims validateBearerAccessToken(String token) {
-        // Bearer 검증
-        if (!token.substring(0, "BEARER ".length()).equalsIgnoreCase("BEARER "))
-            throw new SignatureException("BEARER 서명이 없습니다.");
-
-        // Bearer 키워드 제외한 토큰 검사하기 위해 string 분리
-        token = token.split(" ")[1].trim();
-
-        Claims claimsBody = null;
-        try{
-            claimsBody = verifyToken(token);
-        } catch (ExpiredJwtException exp){
-            throw exp;
-        } catch (Exception e){
-            throw e;
-        }
-
-        return claimsBody;
-    }
-
-    /**
-     *
+     * 토큰을 복호화 한 후 결과물을 반환한다.
      * @param token 검증할 토큰 문자열
      * @return jwt 토큰 페이로드 값
      * @throws SignatureException 서명이 잘못된 경우
@@ -150,37 +123,5 @@ public class JwtTokenProvider {
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    public boolean isValidateToken(String token) {
-        try{
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-            return true;
-        } catch (SignatureException e) {
-            log.info("토큰의 서명이 잘못됐습니다.");
-        } catch (UnsupportedJwtException | MalformedJwtException e) {
-            log.info("jwt 형식이 잘못됐습니다.");
-        } catch (IllegalArgumentException e) {
-            log.info("토큰 값이 없습니다.");
-        } catch (ExpiredJwtException e){
-            log.info("토큰이 만료됐습니다.");
-        }
-        return false;
-    }
-
-    /**
-     * 토큰의 만료일자가 timeUnit단위의 time보다 적게 남았으면 return true
-     * @param expTime 토큰의 만료일자
-     * @param time timeUnit단위의 시간
-     * @param timeUnit 시간 단위(초, 분, 시간, 일)
-     * @return
-     */
-    public boolean isTokenRenewRequired(Date expTime, long time, ChronoUnit timeUnit) {
-        Instant exp = expTime.toInstant();
-        Instant now = Instant.now();
-
-        long diff = now.until(exp, timeUnit);
-
-        return diff < time;
     }
 }
