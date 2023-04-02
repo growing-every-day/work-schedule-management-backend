@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -17,9 +18,17 @@ public abstract class BaseWriterEntity extends BaseTimeEntity{
 
     @CreatedBy
     @Column(nullable = false, updatable = false)
-    private String createdBy; // 생성자
+    private Long createdBy; // 생성자Id
+
+    @Column()
+    @Setter
+    private String createdByName; // 생성자이름
 
     @LastModifiedBy
     @Column(nullable = false)
-    private String modifiedBy; // 수정자
+    private Long modifiedBy; // 수정자Id
+
+    @Column()
+    @Setter
+    private String modifiedByName;
 }

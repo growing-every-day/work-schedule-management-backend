@@ -3,12 +3,14 @@ package fastcampus.workschedulemanagementbackend.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import fastcampus.workschedulemanagementbackend.domain.constants.ScheduleType;
+import fastcampus.workschedulemanagementbackend.dto.request.workschedule.WorkScheduleRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Objects;
 
 @Getter
@@ -50,15 +52,19 @@ public class WorkSchedule extends BaseWriterEntity {
     protected WorkSchedule() {
     }
 
-    private WorkSchedule(UserAccount userAccount, ScheduleType category, LocalDate startDate, LocalDate endDate) {
+    private WorkSchedule(UserAccount userAccount, ScheduleType category, LocalDate startDate, LocalDate endDate, String createdByName, String modifiedByName) {
         this.userAccount = userAccount;
         this.category = category;
         this.start = startDate;
         this.end = endDate;
+        if (createdByName != null)
+            this.setCreatedByName(createdByName);
+        if (modifiedByName != null)
+            this.setCreatedByName(modifiedByName);
     }
 
-    public static WorkSchedule of(UserAccount userAccount, ScheduleType category, LocalDate startDate, LocalDate endDate) {
-        return new WorkSchedule(userAccount, category, startDate, endDate);
+    public static WorkSchedule of(UserAccount userAccount, ScheduleType category, LocalDate startDate, LocalDate endDate, String createdByName, String modifiedByName) {
+        return new WorkSchedule(userAccount, category, startDate, endDate, createdByName, modifiedByName);
     }
 
     @Override
@@ -71,5 +77,22 @@ public class WorkSchedule extends BaseWriterEntity {
     @Override
     public int hashCode() {
         return Objects.hash(this.getEventId());
+    }
+
+    public WorkSchedule update(WorkScheduleRequest workScheduleRequest, String modifiedByName) {
+        if (workScheduleRequest.category() != null){
+            this.category = workScheduleRequest.category();
+        }
+        if (workScheduleRequest.start() != null){
+            this.start = workScheduleRequest.start();
+        }
+        if (workScheduleRequest.end() != null){
+            this.end = workScheduleRequest.end();
+        }
+        if (modifiedByName != null){
+            setModifiedByName(modifiedByName);
+        }
+
+        return this;
     }
 }

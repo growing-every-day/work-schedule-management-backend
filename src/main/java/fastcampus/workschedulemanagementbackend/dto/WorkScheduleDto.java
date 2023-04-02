@@ -17,13 +17,20 @@ public record WorkScheduleDto(
         ScheduleType category,
         LocalDate start,
         LocalDate end,
-        String createdBy,
-        Long createdById,
+        Long createdBy,
+        String createdByName,
         LocalDateTime createdAt,
-        String modifiedBy,
-        Long modifiedById,
+        Long modifiedBy,
+        String modifiedByName,
         LocalDateTime modifiedAt
 ) {
+    public static WorkScheduleDto of(Long eventId,
+                                     ScheduleType category,
+                                     LocalDate start,
+                                     LocalDate end,
+                                     String createdByName){
+        return new WorkScheduleDto(eventId, null, null, null, category, start, end, null, createdByName, null, null, null, null);
+    }
     public static WorkScheduleDto of(Long eventId,
                                      Long userAccountId,
                                      String name,
@@ -31,13 +38,13 @@ public record WorkScheduleDto(
                                      ScheduleType category,
                                      LocalDate start,
                                      LocalDate end,
-                                     String createdBy,
-                                     Long createdById,
+                                     Long createdBy,
+                                     String createdByName,
                                      LocalDateTime createdAt,
-                                     String modifiedBy,
-                                     Long modifiedById,
+                                     Long modifiedBy,
+                                     String modifiedByName,
                                      LocalDateTime modifiedAt){
-        return new WorkScheduleDto(eventId, userAccountId, name, email, category, start, end, createdBy, createdById, createdAt, modifiedBy, modifiedById, modifiedAt);
+        return new WorkScheduleDto(eventId, userAccountId, name, email, category, start, end, createdBy, createdByName, createdAt, modifiedBy, modifiedByName, modifiedAt);
     }
     public static WorkScheduleDto from(WorkSchedule entity, AESUtil aesUtil){
         return WorkScheduleDto.of(
@@ -49,10 +56,10 @@ public record WorkScheduleDto(
                 entity.getStart(),
                 entity.getEnd(),
                 entity.getCreatedBy(),
-                entity.getCreatedById(),
+                entity.getCreatedByName(),
                 entity.getCreatedAt(),
                 entity.getModifiedBy(),
-                entity.getModifiedById(),
+                entity.getModifiedByName(),
                 entity.getModifiedAt()
         );
     }
@@ -74,12 +81,14 @@ public record WorkScheduleDto(
         );
     }
 
-    public WorkSchedule toEntity(UserAccount userAccount, AESUtil aesUtil){
+    public WorkSchedule toEntity(UserAccount userAccount){
         return WorkSchedule.of(
                 userAccount,
                 category,
                 start,
-                end
+                end,
+                createdByName,
+                modifiedByName
         );
     }
 }
