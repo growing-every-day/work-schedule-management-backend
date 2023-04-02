@@ -46,7 +46,7 @@ public class WorkScheduleService {
         Date date = formatter.parse(dateStr);
         List<WorkSchedule> schedules = id != null ?
                 workScheduleRepository.findAllByUserAccountIdWithDate(id, date) :
-                workScheduleRepository.findAllWithUserAccount();
+                workScheduleRepository.findAllWithUserAccount(date);
         if (schedules.isEmpty()) {
             throw new BadRequestException(ErrorCode.SCHEDULE_NOT_FOUND);
         }
