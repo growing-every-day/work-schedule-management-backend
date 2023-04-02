@@ -94,9 +94,6 @@ public class WorkScheduleService {
         Long workScheduleUserId = workSchedule.getUserAccount().getId();
         checkAdminWithSchedule(userid, userAccountPrincipal, workScheduleUserId);
 
-        log.error("workScheduleRequest.category() : {}", workScheduleRequest.category());
-        log.error("workSchedule.getCategory() : {}", workSchedule.getCategory());
-
         return Optional.of(workSchedule)
                 .map(workScheduleEnt -> {
                     LocalDate start = workScheduleRequest.start();
