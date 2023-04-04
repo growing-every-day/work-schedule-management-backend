@@ -49,3 +49,48 @@
 ### ☁️ Hosting
 
 * ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+
+
+## API 설계
+
+[https://www.notion.so/growing-everyday-chan/API-49095a4652ab4ea0bf30d4d8a1939fe5?pvs=4](https://www.notion.so/API-49095a4652ab4ea0bf30d4d8a1939fe5)
+
+## Github flow 전략
+
+예시 참고용: [https://github.com/djkeh/fastcampus-project-board](https://github.com/djkeh/fastcampus-project-board)
+
+### 프로젝트 관리
+
+1. **Issue 생성**
+    1. [https://github.com/orgs/growing-every-day/projects/1](https://github.com/orgs/growing-every-day/projects/1) 이용해서 이슈 생성 및 관리 부탁
+2. **Branch**
+
+```
+feature/#이슈번호-이름
+
+feature/#3-erd-update
+```
+
+1. **Commit**
+
+```
+{동작} #이슈번호 - 내용
+
+refactor #28 - getPersonID()
+feat #411 - Company class and its public methods
+docs #58 - erd 작성
+```
+
+- `build`: Build related changes (eg: npm related/ adding external dependencies)
+- `chore`: A code change that external user won't see (eg: change to .gitignore file or .prettierrc file)
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation related changes
+- `refactor`: A code that neither fix bug nor adds a feature. (eg: You can use this when there is semantic changes like renaming a variable/ function name)
+- `perf`: A code that improves performance
+- `style`: A code that is related to styling
+- `test`: Adding new test or making changes to existing test
+1. **Pull Request** 
+    1. Pull Request 제목은 이슈와 비슷하게 작성
+    2. Pull Request 내용에 `close #이슈번호` 달아주기
+    3. 리뷰어 팀장으로 설정
