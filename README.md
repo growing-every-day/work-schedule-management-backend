@@ -1,10 +1,10 @@
-# 연차/당직 관리 시스템- 백엔드
+# 📆 연차/당직 관리 시스템- 🛠️ 백엔드
 
 연차/당직 관리 시스템 백엔드 구현 했습니다🎉 🎉 🎉 
 
 2023년 3월 기준 가장 최신의 스프링 부트와 관련 기술들, 자바 17 기능들, 개발 도구들을 경험할 수 있도록 만들었습니다‼️
 
-## 멤버
+## 🧑🏻‍💻 멤버
 
 | 담당 | 총괄&회원정보 관련 API| 연차&당직 API | 로그인 API| 회원가입 API|
 | --- | --- | ----------- | ------ | ------ |
@@ -23,7 +23,7 @@
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
 
-## 기술 세부 스택
+## 🧰 기술 세부 스택
 
 * ![springboot](https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=Spring&logoColor=white)
 * ![springWeb](https://img.shields.io/badge/SpringWeb-6DB33F?style=flat-square&logo=Spring&logoColor=white)
