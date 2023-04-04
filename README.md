@@ -13,6 +13,10 @@
 |github| [@seulchan](https://github.com/seulchan)|[@MinKevin](https://github.com/MinKevin)|[@lyh951212](https://github.com/lyh951212)|[@itstimi-XD](https://github.com/itstimi-XD)|
 
 
+## Application Architecture
+
+![아키텍챠](https://user-images.githubusercontent.com/66657988/229710477-a293a58f-794a-457b-9dc2-f796a1c3c6d8.png)
+
 
 ## 🧰 기술 세부 스택
 
