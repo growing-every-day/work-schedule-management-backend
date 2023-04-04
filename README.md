@@ -12,7 +12,9 @@
 |github| [@seulchan](https://github.com/seulchan)|[@MinKevin](https://github.com/MinKevin)|[@lyh951212](https://github.com/lyh951212)|[@itstimi-XD](https://github.com/itstimi-XD)|
 
 
-## 💻 개발 환경
+## 🧰 기술 세부 스택
+
+### 💻 개발 환경
 
 * ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
 * ![Java](https://img.shields.io/badge/java17-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
@@ -20,20 +22,27 @@
 * ![springboot](https://img.shields.io/badge/SpringBoot3.0.4-6DB33F?style=flat-square&logo=Spring&logoColor=white)
 
 
-## 🕓 Version Control
+### 🕓 Version Control
 
 * ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
 
-## 🧰 기술 세부 스택
+### 💾 Databases
 
+* ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+* ![Hibernate](https://img.shields.io/badge/H2-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
+
+
+### 📚 Frameworks, Platforms and Libraries
+
+* ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
 * ![springboot](https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=Spring&logoColor=white)
 * ![springWeb](https://img.shields.io/badge/SpringWeb-6DB33F?style=flat-square&logo=Spring&logoColor=white)
 * ![springDataJpa](https://img.shields.io/badge/SpringDataJPA-6DB33F?style=flat-square&logo=Spring&logoColor=white)
 * ![SpringSecurity](https://img.shields.io/badge/SpringSecurity-6DB33F?style=flat-square&logo=Spring&logoColor=white)
 * ![Spring Boot DevTools](https://img.shields.io/badge/SpringBootDevTools-6DB33F?style=flat-square&logo=Spring&logoColor=white)
-* ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
-* ![Hibernate](https://img.shields.io/badge/H2DB-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
-* ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
-* ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 * Lombok
+
+### ☁️ Hosting
+
+* ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
