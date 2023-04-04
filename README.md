@@ -51,9 +51,239 @@
 * ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 
 
-## API 설계
+## 연차/당직 관리 시스템 API 설계
 
-[https://www.notion.so/growing-everyday-chan/API-49095a4652ab4ea0bf30d4d8a1939fe5?pvs=4](https://www.notion.so/API-49095a4652ab4ea0bf30d4d8a1939fe5)
+### Endpoints
+
+| 종류 | URI | METHOD | 기능 |
+| --- | --- | --- | --- |
+| VIEW | / | GET | 루트 페이지 |
+|  | /error | GET | 에러 페이지 |
+|  | /login | GET | 로그인 페이지 |
+|  | /signup | GET | 회원가입 페이지 |
+|  | /users/{user-id} | GET | 개인정보관리 페이지 |
+|  | /schedules/{user-id} | GET | 연차/당직 관리 페이지 |
+|  | /schedules | GET | 연차/당직 달력 페이지 |
+| API | /api/login | POST | 로그인 요청 |
+|  | /api/logout | POST | 로그아웃 요청 |
+|  | /api/refresh | POST | 토큰 재발급 요청 |
+|  | /api/users | GET | 전체 유저 조회 |
+|  | /api/users/{user-id} | GET | 단일 유저 조회 |
+|  | /api/users/{user-id}/update | POST | 유저 정보 수정 |
+|  | /api/users/{user-id}/delete | POST | 유저 삭제 |
+|  | /api/users/signup | POST | 회원가입 |
+|  | /api/schedules | POST | 전체 연차/당직 조회 |
+|  | /api/schedules/{user-id} | POST | 개인별 연차/당직 조회 |
+|  | /api/schedules/{user-id}/create | POST | 연차/당직 등록 |
+|  | /api/schedules/{user-id}/update | POST | 연차/당직 수정 |
+|  | /api/schedules/{user-id}/delete | POST | 연차/당직 삭제 |
+
+### API Spec
+
+| URI | METHOD | Bearer Authorization 헤더 전송 여부 | Request body | Response body |
+| --- | --- | --- | --- | --- |
+| /api/login | POST | X | "username" : "chan",
+"password" : "chan" | 
+"id": 1,
+"userName": "chan",
+"name": "김철수",
+"email": "mailto:chan@gmail.com",
+"role": "USER",
+"token": {
+"accessToken": "eyJhbGci……",
+"refreshToken": "eyJhb……."
+}
+ |
+| /api/refresh | POST | X | "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjaGFuIiwicm9sZSI6IlVTR…." | 
+"accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdW…….",
+"refreshToken": "eyJhbGciOiJIUzI1NiJ9.ey……."
+ |
+| /api/logout | POST | X | "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjaGFuIiwicm9sZSI6IlVTR…."
+ | true or false |
+| /api/users/signup | POST | X | {“id”: “chan123”, 
+”password”: “@chan123”,
+”email”: “email@email.com”,
+”name”: “김민희”} | {
+    "created": true,
+    "createdUser": {
+        "id": 1,
+        "username": "chan123",
+        "name": "김민희",
+        "email": "email@email.com",
+        "role": "USER",
+        "remainedVacationCount": 25,
+        "createdAt": "2023-04-02T15:49:29.083389",
+        "modifiedAt": "2023-04-02T15:49:29.083389"
+    }
+} |
+| /api/users | GET | O | /api/users?name={이름} | {
+"users": [
+{
+"id": 1,
+"username": "admin",
+"name": "admin",
+"email": "mailto:admin@mail.com",
+"role": "ADMIN",
+"remainedVacationCount": 25,
+"createdAt": "2023-03-27T22:38:31",
+"modifiedAt": "2023-03-27T22:38:31"
+},
+{
+"id": 2,
+"username": "chan",
+"name": "chan",
+"email": "mailto:chan@gmail.com",
+"role": "USER",
+"remainedVacationCount": 25,
+"createdAt": "2023-03-27T22:38:31",
+"modifiedAt": "2023-03-27T22:38:31"
+}
+]
+} |
+| /api/users/{user-id} | GET | O |  | {
+"user": {
+"id": 1,
+"username": "admin",
+"name": "admin",
+"email": "mailto:admin@mail.com",
+"role": "ADMIN",
+"remainedVacationCount": 25,
+"createdAt": "2023-03-27T22:38:31",
+"modifiedAt": "2023-03-27T22:38:31"
+}
+} |
+| /api/users/{user-id}/update | POST (수정) | O | “password”: “chan”,
+”name”: “chan”
+”email”: “chan@mail.com”,
+”role”: “admin”
+”remainedVacationCount”: 25 | {
+    "modified": true,
+    "updatedUser": {
+        "id": 2,
+        "username": "chan",
+        "name": "chan",
+        "email": "chanchan@mail.com",
+        "role": "ADMIN",
+        "remainedVacationCount": 13,
+        "createdAt": "2023-03-27T22:38:31",
+        "modifiedAt": "2023-03-27T22:38:31"
+    }
+} |
+| /api/users/{user-id}/delete | POST (삭제) | O |  | {
+  “deleted”: true
+} |
+| api/schedules?
+year={year}&
+month={month} | GET(조회) | O |  | [
+  {
+    id: {schedule_id}, 
+    user_account_id: {user_id} 
+    category: “연차” | “당직”,
+    start_date: “2023-03-23”,
+    end_date: “2023-03-23”,
+    created_by: “등록한 사람”,
+    created_at: “등록날짜”,
+    modified_by: “수정한 사람”,
+    modified_at: “수정날짜”,
+    name:  “이름”, 
+    email: “이메일”
+  },
+
+  …
+
+] |
+| api/schedules?
+userid={userid}&
+year={year}&
+month={month} | GET(조회) | O |  | [
+  {
+    id: {schedule_id}, 
+    user_account_id: {user_id} 
+    category: “연차” | “당직”,
+    start_date: “2023-03-23”,
+    end_date: “2023-03-23”,
+    created_by: “등록한 사람”,
+    created_at: “등록날짜”,
+    modified_by: “수정한 사람”,
+    modified_at: “수정날짜”,
+    name:  “이름”, 
+    email: “이메일”
+  },
+
+  …
+
+] |
+| /api/schedules/{userid}/create | POST (등록) | O | {
+    category: “연차” | “당직”,
+    start(start_date): “2023-03-23”,
+    end(end_date): “2023-03-23”
+  } | {
+event_id(id): {자동생성},
+    user_account_id: {user_account_id}
+    category: “연차” | “당직”,
+    start(start_date): “2023-03-23”,
+    end(end_date): “2023-03-23”,
+    created_by: “등록한 사람”,
+    created_at: “등록날짜”
+} |
+| /api/schedules/{userid}/update | POST (수정) | O | {
+    event_id: {event_id},
+    category: “연차” | “당직”,
+    start(start_date): “2023-03-23”,
+    end(end_date): “2023-03-23”
+  } | {
+    event_id(id): {event_id} ,
+    user_account_id: {user_account_id}
+    category: “연차” | “당직”,
+     start(start_date): “2023-03-23”,
+    end(end_date): “2023-03-23”,
+    created_by: “등록한 사람”,
+    created_at: “등록날짜”,
+    modified_by: “수정한 사람”,
+    modified_at: “수정날짜”
+  } |
+| /api/schedules/{userid}/delete | POST (삭제) | O | {
+    event_id: {schedule_id}
+} | 삭제 성공 여부 
+return {boolean} |
+
+### REST-API 응답 코드 참고
+
+- 200 OK: 클라이언트 요청을 성공적으로 처리했을 때 사용하는 상태 코드
+- 201 Created: 클라이언트 요청으로 리소스에 데이터를 성공적으로 생성했을 때 사용하는 상태 코드
+- 400 Bad Request: 클라이언트 요청이 유효하지 않음을 의미하는 상태 코드
+- 401 Unauthorized: 인증받지 않은 클라이언트가 요청할 때 응답하는 상태 코드
+- 403 Forbidden: 인가받지 않은 클라이언트가 요청할 때 응답하는 상태 코드
+- 500 Error: 서버 오류로 정상적으로 클라이언트 요청을 처리할 수 없을 때 사용하는 상태 코드
+
+### 에러 처리
+
+| 에러 Class | Http Status code | 에러 코드 | 에러 메시지 | 에러 설명 |
+| --- | --- | --- | --- | --- |
+| ExpiredJwtException | 400 | 1 | 토큰이 만료됐습니다. |  |
+| JwtException | 400 | 2 | 토큰값이 올바르지 않습니다. |  |
+| BadRequestException | 400 | 3 | 다른 회원을 삭제할 권한이 없습니다. | 어드민이 아닐 때, 삭제할 때 발생 |
+| BadRequestException | 400 | 4 | 회원 번호는 null 일 수 없습니다. | 회원 번호가 null일 때 |
+| BadRequestException | 400 | 5 | 회원 번호(%d)를 찾을 수 없습니다 | 데이터베이스에서 회원번호가 없을 때 |
+| FieldValidationException | 400 | 6 | 입력한 값이 올바르지 않습니다. | 입력한 값이 검증을 통과하지 못할 때 |
+| BadRequestException | 400 | 7 | 회원 정보는 null일 수 없습니다. | 업데이트 요청 시, 아무 정보도 들어오지 않았을 때 |
+| BadRequestException | 400 | 8 | 회원 조회에 실패했습니다. | 회원을 조회할 때, 에러가 생겼을 때 |
+| BadRequestException | 400 | 9 | 회원 정보 수정에 실패했습니다. | 회원 업데이트할 때, 에러가 생겼을 때 |
+| BadRequestException | 400 | 10 | 회원 삭제에 실패했습니다. | 회원 삭제 시도 시, 에러 발생 시 |
+| BadRequestException | 400 | 11 | 가입하시려는 아이디가 이미 존재합니다 :( 다른 아이디로 가입해주세요! | 회원가입 시 아이디(username)가 중복되었을 때  |
+| InsufficientAuthenticationException | 401 | 12 | 인증되지 않은 사용자입니다. |  |
+| AccessDeniedException | 403 | 13 | 권한이 없는 사용자입니다. |  |
+| BadRequestException | 400 | 14 | eventId 정보를 받아오는데 실패했습니다. | eventId가 null 일때 |
+| BadRequestException | 400 | 15 | 스케줄 정보가 존재하지 않습니다. | 특정 스케줄을 조회, 수정, 삭제를 시도할 때, 해당 스케줄이 존재하지 않을 때 |
+| BadRequestException | 400 | 16 | 휴가, 당직 중에 일정은 변경할 수 없습니다. | 휴가, 당직 중에 해당 일정을 변경하려 할 때 |
+| InvalidRemainedVacationException | 400 | 17 | 사용가능한 휴가일 수가 부족합니다. 사용가능한 휴가일 수는 %d일 입니다. | 휴가 일정 생성, 수정 시 사용가능한 휴가일 수가 부족할  |
+| BadRequestException | 400 | 18 | 유효하지 않은 유저 권한 타입입니다. | UserRoleType 변환 시 존재하지 않는 권한일 때 |
+| BadRequestException | 400 | 19 | 다른 회원의 스케쥴을 수정할 권한이 없습니다. | 자신의 스케줄이 아니고 관리자 권한이 없고 다른 회원의 스케줄을 수정하려고 시도할 때 |
+| BadRequestException | 400 | 20 | 요청한 날짜가 이미 신청한 당직 또는 휴가 날짜와 중복됩니다. | 휴가, 당직 생성 시, 중복되는 날짜가 있을 때 |
+| BadCredentialsException | 400 | 21 | Access Token의 잘못된 계정정보입니다. |  |
+| InvalidUsernamePasswordException | 400 | 22 | 아이디 또는 비밀번호가 올바르지 않습니다. | 로그인 시 유저네임이 존재하지 않을 때 |
+| 그 외 서버 에러 | 500 | 99 | 서버 오류로 정상적으로 요청을 처리할 수 없습니다. | 서버에서 오류가 발생했을 때 |
+|  |  |  |  |  |
 
 ## ERD 다이어그램
 ![Untitled](https://user-images.githubusercontent.com/66657988/229699626-12e4d978-0152-40cd-b679-f5dac6fcd619.png)
