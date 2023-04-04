@@ -55,7 +55,10 @@
 
 [https://www.notion.so/growing-everyday-chan/API-49095a4652ab4ea0bf30d4d8a1939fe5?pvs=4](https://www.notion.so/API-49095a4652ab4ea0bf30d4d8a1939fe5)
 
-## Github flow 전략
+## ERD 다이어그램
+![Untitled](https://user-images.githubusercontent.com/66657988/229699626-12e4d978-0152-40cd-b679-f5dac6fcd619.png)
+
+## 프로젝트 관리 및 Github Flow 브랜칭 전략
 
 예시 참고용: [https://github.com/djkeh/fastcampus-project-board](https://github.com/djkeh/fastcampus-project-board)
 
