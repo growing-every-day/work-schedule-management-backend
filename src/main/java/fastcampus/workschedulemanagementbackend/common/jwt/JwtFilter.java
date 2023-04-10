@@ -41,7 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 Claims claims = jwtProvider.verifyToken(accessToken);
                 UserAccount userAccount = userAccountRepository.findByUsername(claims.getSubject()).orElseThrow(() ->
                         new BadCredentialsException("Access Token의 잘못된 계정정보입니다."));
-                // access 토큰 생성
+                
                 Authentication auth = jwtProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (ExpiredJwtException e) {
